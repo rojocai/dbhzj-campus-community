@@ -28,6 +28,14 @@ const categoryColors: Record<string, { color: string; bgColor: string; textColor
 
 const defaultCategory = { color: "from-gray-500 to-slate-600", bgColor: "bg-gray-50", textColor: "text-gray-600" };
 
+const CATEGORY_EN: Record<string, string> = {
+  "校园生活": "Campus Life",
+  "学习交流": "Study & Exchange",
+  "社团活动": "Club Activities",
+  "游戏讨论区": "Gaming Discussion",
+  "灌水乐园": "Chat Zone",
+};
+
 export default function HomePage() {
   const { data: postsData, error: postsError } = useSWR(
     "/api/posts?limit=5&sort=latest",
@@ -80,13 +88,13 @@ export default function HomePage() {
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white/90 font-medium whitespace-nowrap text-xs sm:text-sm">
                 <SparklesIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <StyledText siteConfig={siteConfig} textKey="heroTitle">
-                  {siteConfig?.heroWelcome || t('home.heroWelcome')}
+                  {(lang === 'en' || !siteConfig?.heroWelcome) ? t('home.heroWelcome') : siteConfig.heroWelcome}
                 </StyledText>
               </div>
             </div>
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               <StyledText siteConfig={siteConfig} textKey="heroSubtitle" as="span">
-                {siteConfig?.siteSubtitle ? siteConfig.siteSubtitle.replace(/[，,]\\s*/g, '，\\n') : t('home.heroSubtitle').replace(/[,，]\s*/g, '，\n')}
+                {(lang === 'en' || !siteConfig?.siteSubtitle) ? t('home.heroSubtitle') : siteConfig.siteSubtitle.replace(/[，,]\\s*/g, '，\\n')}
               </StyledText>
             </h1>
             {siteConfig?.siteImage && (
@@ -103,11 +111,11 @@ export default function HomePage() {
             )}
             <p className="text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-10 leading-relaxed">
               <StyledText siteConfig={siteConfig} textKey="heroTagline1">
-                {siteConfig?.heroTagline1 || t('home.heroTagline1')}
+                {(lang === 'en' || !siteConfig?.heroTagline1) ? t('home.heroTagline1') : siteConfig.heroTagline1}
               </StyledText>
               <br />
               <StyledText siteConfig={siteConfig} textKey="heroTagline2">
-                {siteConfig?.heroTagline2 || t('home.heroTagline2')}
+                {(lang === 'en' || !siteConfig?.heroTagline2) ? t('home.heroTagline2') : siteConfig.heroTagline2}
               </StyledText>
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -207,6 +215,7 @@ export default function HomePage() {
           ) : (
             categoriesData?.map((cat: any) => {
               const colors = categoryColors[cat.name] || defaultCategory;
+              const displayName = lang === 'en' ? (CATEGORY_EN[cat.name] || cat.name) : cat.name;
               return (
                 <Link
                   key={cat.id}
@@ -222,7 +231,7 @@ export default function HomePage() {
                     )}
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {cat.name}
+                    {displayName}
                   </h3>
                   <p className="text-sm text-gray-500 leading-relaxed">
                     {cat.description || ''}
@@ -412,7 +421,7 @@ export default function HomePage() {
               <div className={siteConfig.aboutImage ? 'md:w-1/2' : 'w-full max-w-3xl mx-auto text-center'}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-4">
                   <InformationCircleIcon className="w-4 h-4" />
-                  {siteConfig.aboutTitle || t('home.aboutUs')}
+                  {(lang === 'en' || !siteConfig?.aboutTitle) ? t('home.aboutUs') : siteConfig.aboutTitle}
                 </div>
                 <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
                   {siteConfig.aboutContent}
@@ -432,12 +441,12 @@ export default function HomePage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             <StyledText siteConfig={siteConfig} textKey="heroJoinTitle">
-              {siteConfig?.heroJoinTitle || t('home.joinTitle')}
+              {(lang === 'en' || !siteConfig?.heroJoinTitle) ? t('home.joinTitle') : siteConfig.heroJoinTitle}
             </StyledText>
           </h2>
           <p className="text-lg text-indigo-100 mb-8 max-w-xl mx-auto">
             <StyledText siteConfig={siteConfig} textKey="heroJoinSubtitle">
-              {siteConfig?.heroJoinSubtitle || t('home.joinSubtitle')}
+              {(lang === 'en' || !siteConfig?.heroJoinSubtitle) ? t('home.joinSubtitle') : siteConfig.heroJoinSubtitle}
             </StyledText>
           </p>
           <Link

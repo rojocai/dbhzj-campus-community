@@ -9,6 +9,9 @@ import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import "./globals.css";
 
+import zhMessages from "@/lib/lang/zh.json";
+import enMessages from "@/lib/lang/en.json";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -19,14 +22,22 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "东白湖之家 - 校园论坛社区",
-    template: "%s | 东白湖之家",
-  },
-  description: "东白湖之家校园论坛社区 — 交流学习，分享生活",
-  keywords: ["东白湖之家", "校园论坛", "学习交流", "社团活动"],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("lang")?.value === "en") ? "en" : "zh";
+  const messages = lang === "en" ? enMessages : zhMessages;
+  const site = messages.site as any;
+  return {
+    title: {
+      default: site.defaultTitle || "Dongbaihu Home - Campus Forum Community",
+      template: site.template || "%s | Dongbaihu Home",
+    },
+    description: site.description || "Dongbaihu Home Campus Forum Community",
+    keywords: lang === "en"
+      ? ["Dongbaihu Home", "Campus Forum", "Student Community", "School"]
+      : ["东白湖之家", "校园论坛", "学习交流", "社团活动"],
+  };
+}
 
 export default async function RootLayout({
   children,
