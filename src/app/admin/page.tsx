@@ -305,7 +305,7 @@ export default function AdminPage() {
         setCategoryForm(prev => ({ ...prev, open: false }))
         fetchCategories()
       } else {
-        setMessage(`❌ 操作失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.categories.messages.failed', { error: data.error || 'Unknown error' }))
       }
     } catch {
       setMessage(t('admin.categories.messages.error'))
@@ -324,10 +324,10 @@ export default function AdminPage() {
         setDeleteConfirm({ open: false, id: '', name: '' })
         fetchCategories()
       } else {
-        setMessage(`❌ 删除失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.categories.messages.deleteFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 删除失败')
+      setMessage(t('admin.categories.messages.deleteError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }, [deleteConfirm, fetchCategories])
@@ -394,10 +394,10 @@ export default function AdminPage() {
         fetchUsers(userPagination.page, userSearch)
       } else {
         const data = await res.json()
-        setMessage(`❌ 删除失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.users.messages.deleteFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 删除失败')
+      setMessage(t('admin.users.messages.deleteError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -415,10 +415,10 @@ export default function AdminPage() {
         fetchUsers(userPagination.page, userSearch)
       } else {
         const data = await res.json()
-        setMessage(`❌ 操作失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.categories.messages.failed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 操作失败')
+      setMessage(t('admin.categories.messages.error'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -458,10 +458,10 @@ export default function AdminPage() {
         fetchPosts(postPagination.page, postSearch, postStatusFilter)
       } else {
         const data = await res.json()
-        setMessage(`❌ 删除失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.posts.messages.deleteFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 删除失败')
+      setMessage(t('admin.posts.messages.deleteError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -486,7 +486,7 @@ export default function AdminPage() {
         setMessage(`❌ ${data.error || t('admin.posts.messages.actionError')}`)
       }
     } catch {
-      setMessage('❌ 操作失败')
+      setMessage(t('admin.posts.messages.actionError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -1198,7 +1198,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.email")}</label>
                 <input
                   type="email"
                   value={config.contactEmail}
@@ -1218,7 +1218,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">QQ</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.qq")}</label>
                 <input
                   type="text"
                   value={config.contactQQ}
@@ -1297,13 +1297,13 @@ export default function AdminPage() {
                   onClick={handleUserSearch}
                   className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors"
                 >
-                  搜索
+                  {t("admin.users.searchButton")}
                 </button>
               </div>
             </div>
 
             {usersLoading ? (
-              <div className="text-center py-10 text-gray-500">加载中...</div>
+              <div className="text-center py-10 text-gray-500">{t("admin.loading")}</div>
             ) : users.length === 0 ? (
               <div className="text-center py-10 text-gray-500">No users yet</div>
             ) : (
@@ -1312,14 +1312,14 @@ export default function AdminPage() {
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-2 font-medium text-gray-500">#</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">昵称</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">邮箱</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">等级</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">积分</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">角色</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">状态</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">注册日期</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">操作</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.users.nickname")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.users.email")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.users.level")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.users.coins")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.users.role")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.users.status")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.users.registeredDate")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.users.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1354,9 +1354,9 @@ export default function AdminPage() {
                         <td className="py-3 px-2 text-center">{roleBadge(user.role)}</td>
                         <td className="py-3 px-2 text-center">
                           {user.isBanned ? (
-                            <span className="text-red-500 text-xs font-medium">禁言中</span>
+                            <span className="text-red-500 text-xs font-medium">{t("admin.users.banned")}</span>
                           ) : (
-                            <span className="text-green-500 text-xs font-medium">正常</span>
+                            <span className="text-green-500 text-xs font-medium">{t("admin.users.normal")}</span>
                           )}
                         </td>
                         <td className="py-3 px-2 text-gray-400 text-xs">
@@ -1368,14 +1368,14 @@ export default function AdminPage() {
                               href={`/admin/users/${user.id}`}
                               className="px-2 py-1 text-xs bg-indigo-50 text-indigo-600 rounded hover:bg-indigo-100 transition-colors"
                             >
-                              编辑
+                              {t("admin.users.edit")}
                             </Link>
                             {user.isBanned ? (
                               <button
                                 onClick={() => handleUnbanUser(user.id)}
                                 className="px-2 py-1 text-xs bg-green-50 text-green-600 rounded hover:bg-green-100 transition-colors"
                               >
-                                解禁
+                                {t("admin.users.unban")}
                               </button>
                             ) : (
                               <button
@@ -1388,7 +1388,7 @@ export default function AdminPage() {
                                 }
                                 className="px-2 py-1 text-xs bg-red-50 text-red-600 rounded hover:bg-red-100 transition-colors"
                               >
-                                禁言
+                                {t("admin.users.ban")}
                               </button>
                             )}
                             {user.role === 'MODERATOR' ? (
@@ -1396,14 +1396,14 @@ export default function AdminPage() {
                                 onClick={() => handleToggleModerator(user)}
                                 className="px-2 py-1 text-xs bg-yellow-50 text-yellow-600 rounded hover:bg-yellow-100 transition-colors"
                               >
-                                取消版主
+                                {t("admin.users.unsetModerator")}
                               </button>
                             ) : user.role === 'USER' ? (
                               <button
                                 onClick={() => handleToggleModerator(user)}
                                 className="px-2 py-1 text-xs bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors"
                               >
-                                设为版主
+                                {t("admin.users.setModerator")}
                               </button>
                             ) : null}
                             {user.role !== 'ADMIN' && (
@@ -1417,7 +1417,7 @@ export default function AdminPage() {
                                 }
                                 className="px-2 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                               >
-                                删除
+                                {t("admin.users.delete")}
                               </button>
                             )}
                           </div>
@@ -1437,7 +1437,7 @@ export default function AdminPage() {
                   disabled={userPagination.page <= 1}
                   className="px-3 py-1 text-sm rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
-                  上一页
+                  {t("feed.prevPage")}
                 </button>
                 <span className="px-3 py-1 text-sm text-gray-500">
                   {userPagination.page} / {userPagination.totalPages} (共{userPagination.total}人)
@@ -1447,7 +1447,7 @@ export default function AdminPage() {
                   disabled={userPagination.page >= userPagination.totalPages}
                   className="px-3 py-1 text-sm rounded border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
-                  下一页
+                  {t("feed.nextPage")}
                 </button>
               </div>
             )}
@@ -1456,30 +1456,30 @@ export default function AdminPage() {
             {deleteUserDialog.open && (
               <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">⚠️ 确认删除用户</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">⚠️ {t("admin.users.confirmDeleteTitle")}</h3>
                   <p className="text-sm text-gray-500 mb-4">
-                    确定要永久删除用户 <span className="font-medium text-gray-700">{deleteUserDialog.userName}</span> 吗？
+                    {t("admin.users.confirmDeleteMessage", { name: deleteUserDialog.userName })}
                     <br/><br/>
-                    此操作将同时删除该用户的：
-                    <br/>• 所有帖子
-                    <br/>• 所有评论
-                    <br/>• 所有点赞/收藏
-                    <br/>• 所有关注关系
+                    {t("admin.users.confirmDeleteDescription")}
+                    <br/>• {t("admin.users.allPosts")}
+                    <br/>• {t("admin.users.allComments")}
+                    <br/>• {t("admin.users.allLikes") || "所有点赞/收藏"}
+                    <br/>• {t("admin.users.allFollows") || "所有关注关系"}
                     <br/><br/>
-                    <span className="text-red-500 font-medium">此操作不可恢复！</span>
+                    <span className="text-red-500 font-medium">{t("admin.users.irreversible") || "此操作不可恢复！"}</span>
                   </p>
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => setDeleteUserDialog({ open: false, userId: '', userName: '' })}
                       className="px-4 py-2 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
                     >
-                      取消
+                      {t("admin.users.cancel")}
                     </button>
                     <button
                       onClick={handleDeleteUser}
                       className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                     >
-                      确认删除
+                      {t("admin.users.confirmDelete")}
                     </button>
                   </div>
                 </div>
@@ -1490,31 +1490,31 @@ export default function AdminPage() {
             {banDialog.open && (
               <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">禁言用户</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{t("admin.users.banDialogTitle")}</h3>
                   <p className="text-sm text-gray-500 mb-4">
-                    用户: <span className="font-medium text-gray-700">{banDialog.userName}</span>
+                    {t("admin.users.banUserLabel")}: <span className="font-medium text-gray-700">{banDialog.userName}</span>
                   </p>
                   <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        禁言天数（留空为永久）
+                        {t("admin.users.banDaysLabel")}
                       </label>
                       <input
                         type="number"
                         min="0"
                         value={banDays}
                         onChange={(e) => setBanDays(e.target.value)}
-                        placeholder="留空或0表示永久禁言"
+                        placeholder={t("admin.users.banDaysPlaceholder")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">禁言原因</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.users.banReasonLabel")}</label>
                       <input
                         type="text"
                         value={banReason}
                         onChange={(e) => setBanReason(e.target.value)}
-                        placeholder="违规操作"
+                        placeholder={t("admin.users.banDefaultReason")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                       />
                     </div>
@@ -1528,13 +1528,13 @@ export default function AdminPage() {
                       }}
                       className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                     >
-                      取消
+                      {t("admin.users.cancel")}
                     </button>
                     <button
                       onClick={handleBanUser}
                       className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                     >
-                      确认禁言
+                      {t("admin.users.confirmBan")}
                     </button>
                   </div>
                 </div>
@@ -1546,7 +1546,7 @@ export default function AdminPage() {
         {activeTab === 'categories' && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">版块管理</h2>
+              <h2 className="text-lg font-semibold text-gray-800">{t("admin.categories.title")}</h2>
               <button
                 onClick={() =>
                   setCategoryForm({
@@ -1566,21 +1566,21 @@ export default function AdminPage() {
             </div>
 
             {categoriesLoading ? (
-              <div className="text-center py-10 text-gray-500">加载中...</div>
+              <div className="text-center py-10 text-gray-500">{t("admin.loading")}</div>
             ) : categories.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">{t("admin.categories.noCategories")}，点击上方按钮创建</div>
+              <div className="text-center py-10 text-gray-500">{t("admin.categories.noCategories")}</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-12">排序</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">图标</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">名称</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">描述</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">帖子数</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">版主</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500">操作</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-12">{t("admin.categories.sortOrder")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.categories.icon")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.categories.name")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.categories.description")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.categories.postCount")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.categories.moderators")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500">{t("admin.categories.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1623,7 +1623,7 @@ export default function AdminPage() {
                               }}
                               className="px-2 py-1 text-xs bg-indigo-50 text-indigo-600 rounded hover:bg-indigo-100 transition-colors"
                             >
-                              编辑
+                              {t("admin.categories.edit")}
                             </button>
                             <button
                               onClick={() => {
@@ -1631,7 +1631,7 @@ export default function AdminPage() {
                               }}
                               className="px-2 py-1 text-xs bg-red-50 text-red-600 rounded hover:bg-red-100 transition-colors"
                             >
-                              删除
+                              {t("admin.categories.delete")}
                             </button>
                           </div>
                         </td>
@@ -1647,7 +1647,7 @@ export default function AdminPage() {
               <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 max-w-lg w-full mx-4 shadow-xl">
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    {categoryForm.mode === 'create' ? '新增版块' : '编辑版块'}
+                    {categoryForm.mode === 'create' ? t("admin.categories.create") : t("admin.categories.edit")}
                   </h3>
                   <div className="space-y-4">
                     <div>
@@ -1658,7 +1658,7 @@ export default function AdminPage() {
                         onChange={(e) =>
                           setCategoryForm((prev) => ({ ...prev, name: e.target.value }))
                         }
-                        placeholder="版块名称"
+                        placeholder={t("admin.categories.namePlaceholder")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                       />
                     </div>
@@ -1670,7 +1670,7 @@ export default function AdminPage() {
                         onChange={(e) =>
                           setCategoryForm((prev) => ({ ...prev, description: e.target.value }))
                         }
-                        placeholder="版块描述"
+                        placeholder={t("admin.categories.descriptionPlaceholder")}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                       />
                     </div>
@@ -1784,7 +1784,7 @@ export default function AdminPage() {
                 <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
                   <p className="text-sm text-gray-500 mb-4">
-                    确定要删除版块「<span className="font-medium text-gray-700">{deleteConfirm.name}</span>」吗？此操作不可恢复。
+                    {t("admin.categories.deleteConfirmText", { name: deleteConfirm.name })}
                   </p>
                   <div className="flex justify-end gap-2">
                     <button
@@ -1809,7 +1809,7 @@ export default function AdminPage() {
         {activeTab === 'posts' && (
           <div className="space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-800">帖子管理</h2>
+              <h2 className="text-lg font-semibold text-gray-800">{t("admin.posts.title")}</h2>
               <span className="text-sm text-gray-400">
                 Total {postPagination.total} posts
               </span>
@@ -1833,17 +1833,17 @@ export default function AdminPage() {
                 }}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               >
-                <option value="">全部状态</option>
-                <option value="PUBLISHED">已发布</option>
-                <option value="DRAFT">草稿</option>
-                <option value="HIDDEN">隐藏</option>
-                <option value="DELETED">已删除</option>
+                <option value="">{t("admin.posts.allStatus")}</option>
+                <option value="PUBLISHED">{t('admin.posts.published')}</option>
+                <option value="DRAFT">{t('admin.posts.draft')}</option>
+                <option value="HIDDEN">{t('admin.posts.hidden')}</option>
+                <option value="DELETED">{t("admin.posts.deleted")}</option>
               </select>
               <button
                 onClick={handlePostSearch}
                 className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
               >
-                搜索
+                {t('admin.posts.searchButton')}
               </button>
             </div>
 
@@ -1857,13 +1857,13 @@ export default function AdminPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">标题</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-24">作者</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">状态</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.posts.postTitle")}</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-24">{t("admin.posts.author")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">{t("admin.posts.statusTitle")}</th>
                       <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">评论</th>
                       <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">点赞</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-28">发布时间</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-32">操作</th>
+                      <th className="text-left py-3 px-2 font-medium text-gray-500 w-28">{t("admin.posts.created")}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-32">{t("admin.posts.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>

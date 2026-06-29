@@ -7,21 +7,21 @@ interface StylePanelProps {
 }
 
 const fonts = [
-  { value: 'sans', label: '无衬线' },
-  { value: 'serif', label: '衬线' },
-  { value: 'mono', label: '等宽' },
-  { value: 'cursive', label: '手写体' },
+  { value: 'sans', label: 'Sans Serif' },
+  { value: 'serif', label: 'Serif' },
+  { value: 'mono', label: 'Monospace' },
+  { value: 'cursive', label: 'Cursive' },
 ]
 
 const effects = [
-  { value: 'none', label: '无' },
-  { value: 'fadeIn', label: '淡入淡出' },
-  { value: 'slideUp', label: '上滑出现' },
-  { value: 'reflection', label: '倒影' },
-  { value: 'glow', label: '发光' },
-  { value: 'rainbow', label: '彩虹渐变' },
-  { value: 'typing', label: '打字机' },
-  { value: 'scroll', label: '滚动' },
+  { value: 'none', label: 'None' },
+  { value: 'fadeIn', label: 'Fade In' },
+  { value: 'slideUp', label: 'Slide Up' },
+  { value: 'reflection', label: 'Reflection' },
+  { value: 'glow', label: 'Glow' },
+  { value: 'rainbow', label: 'Rainbow' },
+  { value: 'typing', label: 'Typewriter' },
+  { value: 'scroll', label: 'Scroll' },
 ]
 
 const defaultStyle = { font: 'sans', size: '18', color: '#ffffff', opacity: '1', effect: 'none' }
@@ -43,7 +43,7 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
 
   return (
     <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
-      {/* 预览 */}
+      {/* Preview */}
       <div
         className="bg-white rounded-lg p-3 border border-gray-200 text-sm overflow-hidden"
         style={{
@@ -64,16 +64,16 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
             style.effect === 'typing' ? 'animate-text-typing' :
             style.effect === 'scroll' ? 'animate-text-scroll' : ''
           }
-          {...(style.effect === 'reflection' ? { 'data-text': '预览文字效果' } : {})}
+          {...(style.effect === 'reflection' ? { 'data-text': 'Preview Text' } : {})}
         >
-          {style.effect === 'reflection' ? '预览文字效果' : '预览文字效果'}
+          {style.effect === 'reflection' ? 'Preview Text' : 'Preview Text'}
         </span>
       </div>
 
-      {/* 字体 + 字号 */}
+      {/* Font + Size */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-xs text-gray-500 mb-0.5">字体</label>
+          <label className="block text-xs text-gray-500 mb-0.5">Font</label>
           <select
             value={style.font}
             onChange={(e) => updateStyle('font', e.target.value)}
@@ -83,7 +83,7 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
           </select>
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-0.5">字号 {style.size}px</label>
+          <label className="block text-xs text-gray-500 mb-0.5">Size {style.size}px</label>
           <input
             type="range" min="12" max="72"
             value={parseInt(style.size) || 18}
@@ -93,10 +93,10 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
         </div>
       </div>
 
-      {/* 颜色 + 透明度 */}
+      {/* Color + Opacity */}
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="block text-xs text-gray-500 mb-0.5">颜色</label>
+          <label className="block text-xs text-gray-500 mb-0.5">Color</label>
           <input
             type="color"
             value={style.color}
@@ -105,7 +105,7 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
           />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-0.5">透明度 {parseFloat(style.opacity).toFixed(1)}</label>
+          <label className="block text-xs text-gray-500 mb-0.5">Opacity {parseFloat(style.opacity).toFixed(1)}</label>
           <input
             type="range" min="0" max="1" step="0.1"
             value={parseFloat(style.opacity)}
@@ -115,9 +115,9 @@ export default function StylePanel({ textKey, config, updateField }: StylePanelP
         </div>
       </div>
 
-      {/* 特效 */}
+      {/* Effect */}
       <div>
-        <label className="block text-xs text-gray-500 mb-0.5">特效</label>
+        <label className="block text-xs text-gray-500 mb-0.5">Effect</label>
         <div className="flex flex-wrap gap-1">
           {effects.map(eff => (
             <button
