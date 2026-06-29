@@ -353,7 +353,15 @@
       "joinSubtitlePlaceholder": "Exchange ideas, share life, and make campus time more wonderful with all teachers and students",
       "textStyle": "🎨 Text Style",
       "textStyleExpanded": "🎨 Text Style ▲",
-      "textStyleCollapsed": "🎨 Text Style ▼"
+      "textStyleCollapsed": "🎨 Text Style ▼",
+      "heroBgSection": "Hero Background Customization",
+      "heroBgHint": "Enable to customize homepage background gradient colors, opacity, blur, and brightness",
+      "homeImage": "Homepage Image (URL or upload)",
+      "homeImagePlaceholder": "https://example.com/image.jpg or click to upload",
+      "poweredBy": "Powered By Text",
+      "poweredByHint": "Displayed in the footer",
+      "siteTitle": "Site Title",
+      "siteTitleHint": "Used for page title and SEO"
     },
     "aboutTab": {
       "title": "About Page Settings",

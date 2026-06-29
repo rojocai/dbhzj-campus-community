@@ -353,7 +353,15 @@
       "joinSubtitlePlaceholder": "与全校师生一起交流学习、分享生活，让校园时光更加精彩",
       "textStyle": "🎨 文字样式",
       "textStyleExpanded": "🎨 文字样式 ▲",
-      "textStyleCollapsed": "🎨 文字样式 ▼"
+      "textStyleCollapsed": "🎨 文字样式 ▼",
+      "heroBgSection": "Hero 背景自定义",
+      "heroBgHint": "开启后可自定义首页背景渐变颜色、透明度、模糊和亮度",
+      "homeImage": "首页图片（支持上传或输入URL）",
+      "homeImagePlaceholder": "https://example.com/image.jpg 或点击上传",
+      "poweredBy": "Powered by 文字",
+      "poweredByHint": "显示在页脚底部的技术提供信息",
+      "siteTitle": "站点标题",
+      "siteTitleHint": "用于页面标题和SEO"
     },
     "aboutTab": {
       "title": "关于我们页面设置",

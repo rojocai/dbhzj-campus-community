@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import StylePanel from '@/components/StylePanel'
+import { useLang } from '@/lib/lang/LangContext'
 
 interface SiteConfig {
   aboutTitle: string
@@ -82,16 +83,16 @@ const defaultConfig: SiteConfig = {
   footerCopyright: '© 2024 练川实验学校 All Rights Reserved',
   footerIcp: '',
   siteTitle: '练川实验学校',
-  siteSubtitle: '连接校园，分享成长',
+  siteSubtitle: 'Connect Campus, Share Growth',
   siteImage: '',
-  footerPoweredBy: '练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma',
-  heroWelcome: '欢迎来到练川实验学校',
+  footerPoweredBy: 'Dongbaihu Home v1.0 | Powered by Next.js & Prisma',
+  heroWelcome: 'Welcome to Lianchuan Experimental School',
   toolbarTitle: '练川实验学校',
   toolbarLogo: '',
-  heroTagline1: '在这里，你可以交流学习经验、分享校园生活、参与社团活动',
-  heroTagline2: '让每一天的校园生活都更加精彩',
-  heroJoinTitle: '加入练川实验学校社区',
-  heroJoinSubtitle: '与全校师生一起交流学习、分享生活，让校园时光更加精彩',
+  heroTagline1: 'Exchange learning experiences, share campus life, join activities',
+  heroTagline2: 'Make every campus day more exciting',
+  heroJoinTitle: 'Join Lianchuan Experimental School Community',
+  heroJoinSubtitle: 'Exchange ideas, share life, make campus time wonderful',
   heroBgEnabled: false,
   heroBgColor1: '#4f46e5',
   heroBgColor2: '#7c3aed',
@@ -117,6 +118,7 @@ const EMOJI_LIST = [
 
 export default function AdminPage() {
   const { data: session, status } = useSession()
+  const { t, lang } = useLang()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'about' | 'contact' | 'footer' | 'home' | 'users' | 'categories' | 'posts'>('about')
   const [config, setConfig] = useState<SiteConfig>(defaultConfig)
@@ -229,13 +231,13 @@ export default function AdminPage() {
       })
       const data = await res.json()
       if (res.ok) {
-        setMessage('✅ 保存成功')
+        setMessage(t('admin.saved'))
         setConfig(data)
       } else {
-        setMessage(`❌ 保存失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.saveFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 保存失败，请检查网络')
+      setMessage(t('admin.saveNetworkError'))
     }
     setSaving(false)
     setTimeout(() => setMessage(''), 3000)
@@ -277,7 +279,7 @@ export default function AdminPage() {
   const handleCategorySave = useCallback(async () => {
     const { mode, id, name, description, icon, color, sortOrder } = categoryForm
     if (!name.trim()) {
-      setMessage('❌ 版块名称不能为空')
+      setMessage(t('admin.categories.nameRequired'))
       setTimeout(() => setMessage(''), 3000)
       return
     }
@@ -299,14 +301,14 @@ export default function AdminPage() {
       }
       const data = await res.json()
       if (res.ok) {
-        setMessage(mode === 'create' ? '✅ 版块已创建' : '✅ 版块已更新')
+        setMessage(mode === 'create' ? t('admin.categories.messages.created') : t('admin.categories.messages.updated'))
         setCategoryForm(prev => ({ ...prev, open: false }))
         fetchCategories()
       } else {
         setMessage(`❌ 操作失败: ${data.error || '未知错误'}`)
       }
     } catch {
-      setMessage('❌ 操作失败，请检查网络')
+      setMessage(t('admin.categories.messages.error'))
     }
     setTimeout(() => setMessage(''), 3000)
   }, [categoryForm, fetchCategories])
@@ -318,7 +320,7 @@ export default function AdminPage() {
       })
       const data = await res.json()
       if (res.ok) {
-        setMessage('✅ 版块已删除')
+        setMessage(t('admin.categories.messages.deleted'))
         setDeleteConfirm({ open: false, id: '', name: '' })
         fetchCategories()
       } else {
@@ -342,21 +344,21 @@ export default function AdminPage() {
         body: JSON.stringify({
           isBanned: true,
           banDays: parseInt(banDays) || 0,
-          banReason: banReason || '违规操作',
+          banReason: banReason || 'Violation',
         }),
       })
       if (res.ok) {
-        setMessage('✅ 禁言成功')
+        setMessage(t('admin.users.messages.banSuccess'))
         setBanDialog({ open: false, userId: '', userName: '' })
         setBanDays('')
         setBanReason('')
         fetchUsers(userPagination.page, userSearch)
       } else {
         const data = await res.json()
-        setMessage(`❌ 禁言失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.users.messages.banFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 禁言失败')
+      setMessage(t('admin.users.messages.banError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -369,14 +371,14 @@ export default function AdminPage() {
         body: JSON.stringify({ isBanned: false }),
       })
       if (res.ok) {
-        setMessage('✅ 已解禁')
+        setMessage(t('admin.users.messages.unbanSuccess'))
         fetchUsers(userPagination.page, userSearch)
       } else {
         const data = await res.json()
-        setMessage(`❌ 解禁失败: ${data.error || '未知错误'}`)
+        setMessage(t('admin.users.messages.unbanFailed', { error: data.error || 'Unknown error' }))
       }
     } catch {
-      setMessage('❌ 解禁失败')
+      setMessage(t('admin.users.messages.unbanError'))
     }
     setTimeout(() => setMessage(''), 3000)
   }
@@ -387,7 +389,7 @@ export default function AdminPage() {
         method: 'DELETE',
       })
       if (res.ok) {
-        setMessage('✅ 用户已删除')
+        setMessage(t('admin.users.messages.deleteSuccess'))
         setDeleteUserDialog({ open: false, userId: '', userName: '' })
         fetchUsers(userPagination.page, userSearch)
       } else {
@@ -409,7 +411,7 @@ export default function AdminPage() {
         body: JSON.stringify({ role: newRole }),
       })
       if (res.ok) {
-        setMessage(newRole === 'MODERATOR' ? '✅ 已设为版主' : '✅ 已取消版主')
+        setMessage(newRole === 'MODERATOR' ? t('admin.users.messages.setModeratorSuccess') : t('admin.users.messages.unsetModeratorSuccess'))
         fetchUsers(userPagination.page, userSearch)
       } else {
         const data = await res.json()
@@ -451,7 +453,7 @@ export default function AdminPage() {
         method: 'DELETE',
       })
       if (res.ok) {
-        setMessage('✅ 帖子已删除')
+        setMessage(t('admin.posts.messages.deleteSuccess'))
         setPostDeleteConfirm({ open: false, id: '', title: '' })
         fetchPosts(postPagination.page, postSearch, postStatusFilter)
       } else {
@@ -474,14 +476,14 @@ export default function AdminPage() {
       const data = await res.json()
       if (res.ok) {
         const actionLabels: Record<string, string> = {
-          isEssence: value ? '已加精' : '已取消加精',
-          isPinned: value ? '已置顶' : '已取消置顶',
-          commentsLocked: value ? '已禁止评论' : '已允许评论',
+          isEssence: value ? t('admin.posts.messages.essenceSet') : t('admin.posts.messages.essenceUnset'),
+          isPinned: value ? t('admin.posts.messages.pinnedSet') : t('admin.posts.messages.pinnedUnset'),
+          commentsLocked: value ? t('admin.posts.messages.commentsLocked') : t('admin.posts.messages.commentsUnlocked'),
         }
-        setMessage(`✅ ${actionLabels[action] || '操作成功'}`)
+        setMessage(`✅ ${actionLabels[action] || t('admin.posts.messages.actionSuccess')}`)
         fetchPosts(postPagination.page, postSearch, postStatusFilter)
       } else {
-        setMessage(`❌ ${data.error || '操作失败'}`)
+        setMessage(`❌ ${data.error || t('admin.posts.messages.actionError')}`)
       }
     } catch {
       setMessage('❌ 操作失败')
@@ -491,10 +493,10 @@ export default function AdminPage() {
 
   const postStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
-      PUBLISHED: '已发布',
-      DRAFT: '草稿',
-      HIDDEN: '隐藏',
-      DELETED: '已删除',
+      PUBLISHED: t('admin.posts.published'),
+      DRAFT: t('admin.posts.draft'),
+      HIDDEN: t('admin.posts.hidden'),
+      DELETED: t('admin.posts.deleted'),
     }
     return labels[status] || status
   }
@@ -533,21 +535,21 @@ export default function AdminPage() {
   }, [showEmojiPicker])
 
   if (status === 'loading' || loading) {
-    return <div className="text-center py-20 text-gray-500">加载中...</div>
+    return <div className="text-center py-20 text-gray-500">{t('admin.loading')}</div>
   }
   if (!session || ((session.user as any).role !== 'ADMIN' && (session.user as any).role !== 'MODERATOR')) return null
 
   // 根据角色筛选可见的标签
   const userRole = (session?.user as any)?.role
   const allTabs = [
-    { key: 'home' as const, label: '首页设置' },
-    { key: 'about' as const, label: '关于我们页面设置' },
-    { key: 'contact' as const, label: '联系方式' },
-    { key: 'footer' as const, label: '页脚信息' },
-    { key: 'users' as const, label: '用户管理' },
-    { key: 'categories' as const, label: '版块管理' },
-    { key: 'posts' as const, label: '帖子管理' },
-    { key: 'version' as const, label: '版本说明' },
+    { key: 'home' as const, label: t('admin.tabs.home') },
+    { key: 'about' as const, label: t('admin.tabs.about') },
+    { key: 'contact' as const, label: t('admin.tabs.contact') },
+    { key: 'footer' as const, label: t('admin.tabs.footer') },
+    { key: 'users' as const, label: t('admin.tabs.users') },
+    { key: 'categories' as const, label: t('admin.tabs.categories') },
+    { key: 'posts' as const, label: t('admin.tabs.posts') },
+    { key: 'version' as const, label: t('admin.tabs.version') },
   ]
   // MODERATOR 只能看到帖子管理
   const tabs = userRole === 'MODERATOR'
@@ -566,9 +568,9 @@ export default function AdminPage() {
       USER: 'bg-gray-100 text-gray-600',
     }
     const labels: Record<string, string> = {
-      ADMIN: '管理员',
-      MODERATOR: '版主',
-      USER: '用户',
+      ADMIN: t('admin.users.roles.ADMIN'),
+      MODERATOR: t('admin.users.roles.MODERATOR'),
+      USER: t('admin.users.roles.USER'),
     }
     return (
       <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${styles[role] || styles.USER}`}>
@@ -580,9 +582,9 @@ export default function AdminPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">管理后台</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('admin.title')}</h1>
         <Link href="/" className="text-sm text-indigo-600 hover:text-indigo-700">
-          返回首页
+          {t('admin.backHome')}
         </Link>
       </div>
 
@@ -607,43 +609,43 @@ export default function AdminPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         {activeTab === 'home' && (
           <div className="space-y-5">
-            <h2 className="text-lg font-semibold text-gray-800">首页设置</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('admin.home.title')}</h2>
 
-            {/* ===== 工具栏设置 ===== */}
+            {/* Toolbar Settings */}
             <div className="border-b border-gray-100 pb-4">
-              <h3 className="text-md font-semibold text-gray-700 mb-3">🔧 工具栏设置</h3>
+              <h3 className="text-md font-semibold text-gray-700 mb-3">{t('admin.home.toolbarSettings')}</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">工具栏标题</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.toolbarTitle')}</label>
                   <input
                     type="text"
                     value={config.toolbarTitle}
                     onChange={(e) => updateField('toolbarTitle', e.target.value)}
-                    placeholder="练川实验学校"
+                    placeholder={t('admin.home.toolbarTitlePlaceholder')}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                   />
-                  <p className="text-xs text-gray-400 mt-1">显示在页面左上角工具栏</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('admin.home.toolbarTitleHint')}</p>
                   <button
                     type="button"
                     onClick={() => setOpenStylePanels(p => ({ ...p, toolbarTitle: !p.toolbarTitle }))}
                     className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
                   >
-                    🎨 文字样式 {openStylePanels.toolbarTitle ? '▲' : '▼'}
+                    {t('admin.home.textStyle')} {openStylePanels.toolbarTitle ? '▲' : '▼'}
                   </button>
                   {openStylePanels.toolbarTitle && <StylePanel textKey="toolbarTitle" config={config} updateField={updateField} />}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">工具栏Logo</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.toolbarLogo')}</label>
                   <div className="flex gap-2 items-center">
                     <input
                       type="text"
                       value={config.toolbarLogo}
                       onChange={(e) => updateField('toolbarLogo', e.target.value)}
-                      placeholder="https://example.com/logo.png 或点击上传"
+                      placeholder={t('admin.home.toolbarLogoPlaceholder')}
                       className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                     />
                     <label className="shrink-0 cursor-pointer px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-medium">
-                      上传图片
+                      {t('admin.home.uploadImage')}
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -652,7 +654,7 @@ export default function AdminPage() {
                           const file = e.target.files?.[0]
                           if (!file) return
                           if (file.size > 10 * 1024 * 1024) {
-                            alert('图片不能超过 10MB')
+                            alert('Image cannot exceed 10MB')
                             return
                           }
                           const fd = new FormData()
@@ -667,15 +669,15 @@ export default function AdminPage() {
                       />
                     </label>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">建议 100x100px 正方形图片，留空则显示首字渐变图标</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('admin.home.toolbarLogoSuggest')}</p>
                   {config.toolbarLogo && (
                     <div className="mt-2 flex items-center gap-2">
-                      <img src={config.toolbarLogo} alt="logo预览" className="w-9 h-9 rounded-lg object-cover border" />
+                      <img src={config.toolbarLogo} alt="Logo preview" className="w-9 h-9 rounded-lg object-cover border" />
                       <button
                         onClick={() => updateField('toolbarLogo', '')}
                         className="text-xs text-red-500 hover:text-red-700"
                       >
-                        清除
+                        {t('admin.home.clear')}
                       </button>
                     </div>
                   )}
@@ -685,23 +687,23 @@ export default function AdminPage() {
 
             {/* ===== 首页欢迎语 ===== */}
             <div className="border-b border-gray-100 pb-4">
-              <h3 className="text-md font-semibold text-gray-700 mb-3">👋 首页欢迎语</h3>
+              <h3 className="text-md font-semibold text-gray-700 mb-3">{t('admin.home.heroWelcomeTitle')}</h3>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">欢迎文字</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.heroWelcomeLabel')}</label>
                 <input
                   type="text"
                   value={config.heroWelcome}
                   onChange={(e) => updateField('heroWelcome', e.target.value)}
-                  placeholder="欢迎来到练川实验学校"
+                  placeholder={t('admin.home.heroWelcomePlaceholder')}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                 />
-                <p className="text-xs text-gray-400 mt-1">首页Hero区域的欢迎语，支持自定义文字、样式和特效</p>
+                <p className="text-xs text-gray-400 mt-1">{t('admin.home.heroWelcomeHint')}</p>
                 <button
                   type="button"
                   onClick={() => setOpenStylePanels(p => ({ ...p, heroTitle: !p.heroTitle }))}
                   className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
                 >
-                  🎨 文字样式 {openStylePanels.heroTitle ? '▲' : '▼'}
+                  {t('admin.home.textStyle')} {openStylePanels.heroTitle ? '▲' : '▼'}
                 </button>
                 {openStylePanels.heroTitle && <StylePanel textKey="heroTitle" config={config} updateField={updateField} />}
               </div>
@@ -709,114 +711,114 @@ export default function AdminPage() {
 
             {/* ===== 副标题 ===== */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">副标题</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.subtitle')}</label>
               <input
                 type="text"
                 value={config.siteSubtitle}
                 onChange={(e) => updateField('siteSubtitle', e.target.value)}
-                placeholder="连接校园，分享成长"
+                placeholder={t('admin.home.subtitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">首页Hero区域的副标题文字</p>
+              <p className="text-xs text-gray-400 mt-1">{t('admin.home.subtitleHint')}</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, heroSubtitle: !p.heroSubtitle }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.heroSubtitle ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.heroSubtitle ? '▲' : '▼'}
               </button>
               {openStylePanels.heroSubtitle && <StylePanel textKey="heroSubtitle" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">标语第一行</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.tagline1')}</label>
               <input
                 type="text"
                 value={config.heroTagline1}
                 onChange={(e) => updateField('heroTagline1', e.target.value)}
-                placeholder="在这里，你可以交流学习经验、分享校园生活、参与社团活动"
+                placeholder={t('admin.home.tagline1Placeholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">首页Hero区域的大标语第一行</p>
+              <p className="text-xs text-gray-400 mt-1">Hero tagline line 1</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, heroTagline1: !p.heroTagline1 }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.heroTagline1 ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.heroTagline1 ? '▲' : '▼'}
               </button>
               {openStylePanels.heroTagline1 && <StylePanel textKey="heroTagline1" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">标语第二行</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.tagline2')}</label>
               <input
                 type="text"
                 value={config.heroTagline2}
                 onChange={(e) => updateField('heroTagline2', e.target.value)}
-                placeholder="让每一天的校园生活都更加精彩"
+                placeholder={t('admin.home.tagline2Placeholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">首页Hero区域的小标语第二行</p>
+              <p className="text-xs text-gray-400 mt-1">Hero tagline line 2</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, heroTagline2: !p.heroTagline2 }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.heroTagline2 ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.heroTagline2 ? '▲' : '▼'}
               </button>
               {openStylePanels.heroTagline2 && <StylePanel textKey="heroTagline2" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">底部号召主标题</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.joinTitle')}</label>
               <input
                 type="text"
                 value={config.heroJoinTitle}
                 onChange={(e) => updateField('heroJoinTitle', e.target.value)}
-                placeholder="加入练川实验学校社区"
+                placeholder={t('admin.home.joinTitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">首页底部「加入社区」部分的主标题，支持文字样式</p>
+              <p className="text-xs text-gray-400 mt-1">Join title hint - supports text styles</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, heroJoinTitle: !p.heroJoinTitle }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.heroJoinTitle ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.heroJoinTitle ? '▲' : '▼'}
               </button>
               {openStylePanels.heroJoinTitle && <StylePanel textKey="heroJoinTitle" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">底部号召副标题</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.joinSubtitle')}</label>
               <input
                 type="text"
                 value={config.heroJoinSubtitle}
                 onChange={(e) => updateField('heroJoinSubtitle', e.target.value)}
-                placeholder="与全校师生一起交流学习、分享生活，让校园时光更加精彩"
+                placeholder={t('admin.home.joinSubtitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">首页底部「加入社区」部分的副标题文字，支持文字样式</p>
+              <p className="text-xs text-gray-400 mt-1">Join subtitle hint - supports text styles</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, heroJoinSubtitle: !p.heroJoinSubtitle }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.heroJoinSubtitle ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.heroJoinSubtitle ? '▲' : '▼'}
               </button>
               {openStylePanels.heroJoinSubtitle && <StylePanel textKey="heroJoinSubtitle" config={config} updateField={updateField} />}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                首页图片（支持上传或输入URL）
+                {t('admin.home.homeImage')}
               </label>
               <div className="flex gap-2 items-center">
                 <input
                   type="text"
                   value={config.siteImage}
                   onChange={(e) => updateField('siteImage', e.target.value)}
-                  placeholder="https://example.com/image.jpg 或点击上传"
+                  placeholder={t('admin.home.homeImagePlaceholder')}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                 />
                 <label className="shrink-0 cursor-pointer px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-medium">
-                  上传图片
+                  {t('admin.home.uploadImage')}
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -825,7 +827,7 @@ export default function AdminPage() {
                       const file = e.target.files?.[0]
                       if (!file) return
                       if (file.size > 10 * 1024 * 1024) {
-                        alert('图片不能超过 10MB')
+                        alert('Image cannot exceed 10MB')
                         return
                       }
                       const fd = new FormData()
@@ -838,7 +840,7 @@ export default function AdminPage() {
                       if (res.ok && data.url) {
                         updateField('siteImage', data.url)
                       } else {
-                        alert('上传失败: ' + (data.error || '未知错误'))
+                        alert('Upload failed: ' + (data.error || 'Unknown error'))
                       }
                     }}
                   />
@@ -848,7 +850,7 @@ export default function AdminPage() {
                 <div className="mt-3">
                   <img
                     src={config.siteImage}
-                    alt="首页图片预览"
+                    alt="Preview"
                     className="max-h-48 rounded-lg border border-gray-200 object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none'
@@ -858,12 +860,12 @@ export default function AdminPage() {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Powered by 文字</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.poweredBy')}</label>
               <input
                 type="text"
                 value={config.footerPoweredBy}
                 onChange={(e) => updateField('footerPoweredBy', e.target.value)}
-                placeholder="练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma"
+                placeholder={t('admin.home.poweredByPlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
               <p className="text-xs text-gray-400 mt-1">显示在页脚底部的技术提供信息</p>
@@ -900,7 +902,7 @@ export default function AdminPage() {
                   {/* 三个渐变色 */}
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">起始色</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Start Color</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
@@ -917,7 +919,7 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">中间色</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Mid Color</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
@@ -934,7 +936,7 @@ export default function AdminPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">结束色</label>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">End Color</label>
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
@@ -956,7 +958,7 @@ export default function AdminPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        透明度: {parseFloat(config.heroBgOpacity).toFixed(1)}
+                        Opacity: {parseFloat(config.heroBgOpacity).toFixed(1)}
                       </label>
                       <input
                         type="range"
@@ -970,7 +972,7 @@ export default function AdminPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">
-                        亮度: {parseFloat(config.heroBgBrightness).toFixed(1)}
+                        Brightness: {parseFloat(config.heroBgBrightness).toFixed(1)}
                       </label>
                       <input
                         type="range"
@@ -987,7 +989,7 @@ export default function AdminPage() {
                   {/* 模糊效果 */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600 mb-1">
-                      模糊效果: {config.heroBgBlur || '0'}px
+                      Blur: {config.heroBgBlur || '0'}px
                     </label>
                     <input
                       type="range"
@@ -1014,7 +1016,7 @@ export default function AdminPage() {
                     }}
                     className="w-full py-2 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-red-500 transition-colors"
                   >
-                    恢复默认背景
+                    Reset to Default
                   </button>
                 </>
               )}
@@ -1022,12 +1024,12 @@ export default function AdminPage() {
 
             {/* 烟花特效设置 */}
             <div className="border-t border-gray-100 pt-6">
-              <h3 className="text-md font-semibold text-gray-800 mb-3">🎆 首页烟花特效</h3>
-              <p className="text-xs text-gray-400 mb-4">每次进入首页播放烟花动画，每个会话只播放一次</p>
+              <h3 className="text-md font-semibold text-gray-800 mb-3">🎆 Homepage Fireworks</h3>
+              <p className="text-xs text-gray-400 mb-4">Fireworks play once per session on homepage entry.</p>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    绽放时长（秒）：<span className="font-bold text-indigo-600">{config.fireworksDuration || 0}</span>
+                    Duration (seconds): <span className="font-bold text-indigo-600">{config.fireworksDuration || 0}</span>
                   </label>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-gray-400 w-6 text-right">0</span>
@@ -1043,9 +1045,9 @@ export default function AdminPage() {
                     <span className="text-xs text-gray-400 w-6">60</span>
                   </div>
                   <div className="flex gap-2 mt-2">
-                    <span className="text-xs text-gray-400">0=关闭</span>
+                    <span className="text-xs text-gray-400">0=Off</span>
                     <span className="text-xs text-gray-400">|</span>
-                    <span className="text-xs text-gray-400">推荐 15 秒</span>
+                    <span className="text-xs text-gray-400">Recommended: 15s</span>
                   </div>
                 </div>
               </div>
@@ -1056,16 +1058,16 @@ export default function AdminPage() {
               disabled={saving}
               className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {saving ? '保存中...' : '保存设置'}
+              {saving ? t('admin.saving') : t('admin.save')}
             </button>
           </div>
         )}
 
         {activeTab === 'about' && (
           <div className="space-y-5">
-            <h2 className="text-lg font-semibold text-gray-800">关于我们编辑</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t('admin.aboutTab.title')}</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">标题</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutTitle')}</label>
               <input
                 type="text"
                 value={config.aboutTitle}
@@ -1077,12 +1079,12 @@ export default function AdminPage() {
                 onClick={() => setOpenStylePanels(p => ({ ...p, aboutTitle: !p.aboutTitle }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.aboutTitle ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.aboutTitle ? '▲' : '▼'}
               </button>
               {openStylePanels.aboutTitle && <StylePanel textKey="aboutTitle" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">副标题</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutSubtitle')}</label>
               <input
                 type="text"
                 value={config.aboutSubtitle}
@@ -1096,12 +1098,12 @@ export default function AdminPage() {
                 onClick={() => setOpenStylePanels(p => ({ ...p, aboutSubtitle: !p.aboutSubtitle }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.aboutSubtitle ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.aboutSubtitle ? '▲' : '▼'}
               </button>
               {openStylePanels.aboutSubtitle && <StylePanel textKey="aboutSubtitle" config={config} updateField={updateField} />}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">内容</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutContent')}</label>
               <textarea
                 rows={6}
                 value={config.aboutContent}
@@ -1113,13 +1115,13 @@ export default function AdminPage() {
                 onClick={() => setOpenStylePanels(p => ({ ...p, aboutContent: !p.aboutContent }))}
                 className="mt-2 flex items-center gap-1 text-xs text-indigo-500 hover:text-indigo-700 transition-colors"
               >
-                🎨 文字样式 {openStylePanels.aboutContent ? '▲' : '▼'}
+                {t('admin.home.textStyle')} {openStylePanels.aboutContent ? '▲' : '▼'}
               </button>
               {openStylePanels.aboutContent && <StylePanel textKey="aboutContent" config={config} updateField={updateField} />}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                图片（支持上传或输入URL）
+                {t('admin.aboutTab.aboutImage')}
               </label>
               <div className="flex gap-2 items-center">
                 <input
@@ -1130,7 +1132,7 @@ export default function AdminPage() {
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                 />
                 <label className="shrink-0 cursor-pointer px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-medium">
-                  上传图片
+                  {t('admin.home.uploadImage')}
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -1139,7 +1141,7 @@ export default function AdminPage() {
                       const file = e.target.files?.[0]
                       if (!file) return
                       if (file.size > 10 * 1024 * 1024) {
-                        alert('图片不能超过 10MB')
+                        alert('Image cannot exceed 10MB')
                         return
                       }
                       const fd = new FormData()
@@ -1152,7 +1154,7 @@ export default function AdminPage() {
                       if (res.ok && data.url) {
                         updateField('aboutImage', data.url)
                       } else {
-                        alert('上传失败: ' + (data.error || '未知错误'))
+                        alert('Upload failed: ' + (data.error || 'Unknown error'))
                       }
                     }}
                   />
@@ -1162,7 +1164,7 @@ export default function AdminPage() {
                 <div className="mt-3">
                   <img
                     src={config.aboutImage}
-                    alt="预览"
+                    alt="Preview"
                     className="max-h-48 rounded-lg border border-gray-200 object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none'
@@ -1176,17 +1178,17 @@ export default function AdminPage() {
               disabled={saving}
               className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {saving ? '保存中...' : '保存设置'}
+              {saving ? t('admin.saving') : t('admin.save')}
             </button>
           </div>
         )}
 
         {activeTab === 'contact' && (
           <div className="space-y-5">
-            <h2 className="text-lg font-semibold text-gray-800">联系方式编辑</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("admin.contact.title")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">电话</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.phone")}</label>
                 <input
                   type="text"
                   value={config.contactPhone}
@@ -1206,7 +1208,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">微信</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.wechat")}</label>
                 <input
                   type="text"
                   value={config.contactWechat}
@@ -1226,7 +1228,7 @@ export default function AdminPage() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">地址</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.address")}</label>
                 <input
                   type="text"
                   value={config.contactAddress}
@@ -1241,16 +1243,16 @@ export default function AdminPage() {
               disabled={saving}
               className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {saving ? '保存中...' : '保存设置'}
+              {saving ? t('admin.saving') : t('admin.save')}
             </button>
           </div>
         )}
 
         {activeTab === 'footer' && (
           <div className="space-y-5">
-            <h2 className="text-lg font-semibold text-gray-800">页脚信息编辑</h2>
+            <h2 className="text-lg font-semibold text-gray-800">{t("admin.footer.title")}</h2>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">版权信息</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.footer.copyright")}</label>
               <input
                 type="text"
                 value={config.footerCopyright}
@@ -1259,7 +1261,7 @@ export default function AdminPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">ICP备案号</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.footer.icp")}</label>
               <input
                 type="text"
                 value={config.footerIcp}
@@ -1273,7 +1275,7 @@ export default function AdminPage() {
               disabled={saving}
               className="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {saving ? '保存中...' : '保存设置'}
+              {saving ? t('admin.saving') : t('admin.save')}
             </button>
           </div>
         )}
@@ -1281,14 +1283,14 @@ export default function AdminPage() {
         {activeTab === 'users' && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-800">用户管理</h2>
+              <h2 className="text-lg font-semibold text-gray-800">{t("admin.users.title")}</h2>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={userSearch}
                   onChange={(e) => setUserSearch(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleUserSearch()}
-                  placeholder="搜索用户名/昵称/邮箱..."
+                  placeholder={t('admin.users.search')}
                   className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none w-60"
                 />
                 <button
@@ -1303,7 +1305,7 @@ export default function AdminPage() {
             {usersLoading ? (
               <div className="text-center py-10 text-gray-500">加载中...</div>
             ) : users.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">暂无用户</div>
+              <div className="text-center py-10 text-gray-500">No users yet</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -1559,14 +1561,14 @@ export default function AdminPage() {
                 }
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
               >
-                + 新增版块
+                + {t("admin.categories.create")}
               </button>
             </div>
 
             {categoriesLoading ? (
               <div className="text-center py-10 text-gray-500">加载中...</div>
             ) : categories.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">暂无版块，点击上方按钮创建</div>
+              <div className="text-center py-10 text-gray-500">{t("admin.categories.noCategories")}，点击上方按钮创建</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -1809,7 +1811,7 @@ export default function AdminPage() {
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-800">帖子管理</h2>
               <span className="text-sm text-gray-400">
-                共 {postPagination.total} 篇帖子
+                Total {postPagination.total} posts
               </span>
             </div>
 
@@ -1820,7 +1822,7 @@ export default function AdminPage() {
                 value={postSearch}
                 onChange={(e) => setPostSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handlePostSearch()}
-                placeholder="搜索帖子标题..."
+                placeholder={t('admin.posts.search')}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
               <select
@@ -1849,7 +1851,7 @@ export default function AdminPage() {
             {postsLoading ? (
               <div className="text-center py-10 text-gray-400 text-sm">加载中...</div>
             ) : posts.length === 0 ? (
-              <div className="text-center py-10 text-gray-400 text-sm">暂无帖子</div>
+              <div className="text-center py-10 text-gray-400 text-sm">{t("admin.posts.noPosts")}</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -2026,13 +2028,13 @@ export default function AdminPage() {
         {activeTab === 'version' && (
           <div className="space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-800">版本说明</h2>
+              <h2 className="text-lg font-semibold text-gray-800">{t("admin.version.title")}</h2>
             </div>
 
             <div className="bg-white rounded-xl border border-gray-100 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-bold">V1.0.0</span>
-                <span className="text-sm text-gray-400">当前运行版本</span>
+                <span className="text-sm text-gray-400">Current Version</span>
               </div>
               <div className="prose prose-sm max-w-none text-gray-600 space-y-4">
                 <div>
