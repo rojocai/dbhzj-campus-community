@@ -194,6 +194,26 @@ export default function AdminPage() {
     title: '',
   })
 
+  // Category EN mapping for display
+  const CATEGORY_NAME_EN: Record<string, string> = {
+    '校园生活': 'Campus Life',
+    '学习交流': 'Study & Exchange',
+    '社团活动': 'Club Activities',
+    '游戏讨论区': 'Gaming Discussion',
+    '灌水乐园': 'Chat Zone',
+  }
+
+  const CATEGORY_DESC_EN: Record<string, string> = {
+    '校园生活': 'Share campus daily life, cafeteria food, dormitory life, etc.',
+    '学习交流': 'Course discussions, study resources, exam experience sharing',
+    '社团活动': 'Club recruitment, activity notices, highlights',
+    '游戏讨论区': 'Video games, board games, esports discussion',
+    '灌水乐园': 'Casual chat, daily banter, light topics',
+  }
+
+  const getCatName = (name: string) => lang === 'en' ? (CATEGORY_NAME_EN[name] || name) : name
+  const getCatDesc = (desc: string, name: string) => lang === 'en' ? (CATEGORY_DESC_EN[name] || desc) : desc
+
   // Accordion state for style panels
   const [openStylePanels, setOpenStylePanels] = useState<Record<string, boolean>>({})
 
@@ -215,6 +235,26 @@ export default function AdminPage() {
         .catch(() => setLoading(false))
     }
   }, [session])
+
+  const getDisplayVal = (field: keyof SiteConfig): string => {
+    if (lang !== 'en') return String(config[field] ?? '')
+    const enVals: Partial<Record<keyof SiteConfig, string>> = {
+      siteTitle: t('siteContent.siteTitle') as string,
+      siteSubtitle: t('siteContent.siteSubtitle') as string,
+      toolbarTitle: t('siteContent.toolbarTitle') as string,
+      heroWelcome: t('siteContent.heroWelcome') as string,
+      heroTagline1: t('siteContent.heroTagline1') as string,
+      heroTagline2: t('siteContent.heroTagline2') as string,
+      heroJoinTitle: t('siteContent.heroJoinTitle') as string,
+      heroJoinSubtitle: t('siteContent.heroJoinSubtitle') as string,
+      aboutTitle: t('siteContent.aboutTitle') as string,
+      aboutSubtitle: t('siteContent.aboutSubtitle') as string,
+      aboutContent: t('siteContent.aboutContent') as string,
+      footerCopyright: t('siteContent.footerCopyright') as string,
+      footerPoweredBy: t('siteContent.footerPoweredBy') as string,
+    }
+    return enVals[field] || String(config[field] ?? '')
+  }
 
   const updateField = useCallback((field: keyof SiteConfig, value: string | boolean) => {
     setConfig((prev) => ({ ...prev, [field]: value }))
@@ -619,7 +659,7 @@ export default function AdminPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.toolbarTitle')}</label>
                   <input
                     type="text"
-                    value={config.toolbarTitle}
+                    value={getDisplayVal('toolbarTitle')}
                     onChange={(e) => updateField('toolbarTitle', e.target.value)}
                     placeholder={t('admin.home.toolbarTitlePlaceholder')}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -692,7 +732,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.heroWelcomeLabel')}</label>
                 <input
                   type="text"
-                  value={config.heroWelcome}
+                  value={getDisplayVal('heroWelcome')}
                   onChange={(e) => updateField('heroWelcome', e.target.value)}
                   placeholder={t('admin.home.heroWelcomePlaceholder')}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -714,7 +754,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.subtitle')}</label>
               <input
                 type="text"
-                value={config.siteSubtitle}
+                value={getDisplayVal('siteSubtitle')}
                 onChange={(e) => updateField('siteSubtitle', e.target.value)}
                 placeholder={t('admin.home.subtitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -733,7 +773,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.tagline1')}</label>
               <input
                 type="text"
-                value={config.heroTagline1}
+                value={getDisplayVal('heroTagline1')}
                 onChange={(e) => updateField('heroTagline1', e.target.value)}
                 placeholder={t('admin.home.tagline1Placeholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -752,7 +792,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.tagline2')}</label>
               <input
                 type="text"
-                value={config.heroTagline2}
+                value={getDisplayVal('heroTagline2')}
                 onChange={(e) => updateField('heroTagline2', e.target.value)}
                 placeholder={t('admin.home.tagline2Placeholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -771,7 +811,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.joinTitle')}</label>
               <input
                 type="text"
-                value={config.heroJoinTitle}
+                value={getDisplayVal('heroJoinTitle')}
                 onChange={(e) => updateField('heroJoinTitle', e.target.value)}
                 placeholder={t('admin.home.joinTitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -790,7 +830,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.joinSubtitle')}</label>
               <input
                 type="text"
-                value={config.heroJoinSubtitle}
+                value={getDisplayVal('heroJoinSubtitle')}
                 onChange={(e) => updateField('heroJoinSubtitle', e.target.value)}
                 placeholder={t('admin.home.joinSubtitlePlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -863,7 +903,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.home.poweredBy')}</label>
               <input
                 type="text"
-                value={config.footerPoweredBy}
+                value={getDisplayVal('footerPoweredBy')}
                 onChange={(e) => updateField('footerPoweredBy', e.target.value)}
                 placeholder={t('admin.home.poweredByPlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1070,7 +1110,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutTitle')}</label>
               <input
                 type="text"
-                value={config.aboutTitle}
+                value={getDisplayVal('aboutTitle')}
                 onChange={(e) => updateField('aboutTitle', e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
@@ -1087,7 +1127,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutSubtitle')}</label>
               <input
                 type="text"
-                value={config.aboutSubtitle}
+                value={getDisplayVal('aboutSubtitle')}
                 onChange={(e) => updateField('aboutSubtitle', e.target.value)}
                 placeholder={t('admin.aboutTab.aboutSubtitlePlaceholder') || ''}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1106,7 +1146,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.aboutTab.aboutContent')}</label>
               <textarea
                 rows={6}
-                value={config.aboutContent}
+                value={getDisplayVal('aboutContent')}
                 onChange={(e) => updateField('aboutContent', e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-y"
               />
@@ -1191,7 +1231,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.phone")}</label>
                 <input
                   type="text"
-                  value={config.contactPhone}
+                  value={getDisplayVal('contactPhone')}
                   onChange={(e) => updateField('contactPhone', e.target.value)}
                   placeholder="010-88886666"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1201,7 +1241,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.email")}</label>
                 <input
                   type="email"
-                  value={config.contactEmail}
+                  value={getDisplayVal('contactEmail')}
                   onChange={(e) => updateField('contactEmail', e.target.value)}
                   placeholder="contact@lc26.de"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1211,7 +1251,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.wechat")}</label>
                 <input
                   type="text"
-                  value={config.contactWechat}
+                  value={getDisplayVal('contactWechat')}
                   onChange={(e) => updateField('contactWechat', e.target.value)}
                   placeholder="lcsy"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1221,7 +1261,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.qq")}</label>
                 <input
                   type="text"
-                  value={config.contactQQ}
+                  value={getDisplayVal('contactQQ')}
                   onChange={(e) => updateField('contactQQ', e.target.value)}
                   placeholder="123456789"
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1231,7 +1271,7 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.contact.address")}</label>
                 <input
                   type="text"
-                  value={config.contactAddress}
+                  value={getDisplayVal('contactAddress')}
                   onChange={(e) => updateField('contactAddress', e.target.value)}
                   placeholder={t('admin.contact.addressPlaceholder') || ''}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1255,7 +1295,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.footer.copyright")}</label>
               <input
                 type="text"
-                value={config.footerCopyright}
+                value={getDisplayVal('footerCopyright')}
                 onChange={(e) => updateField('footerCopyright', e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
@@ -1264,7 +1304,7 @@ export default function AdminPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">{t("admin.footer.icp")}</label>
               <input
                 type="text"
-                value={config.footerIcp}
+                value={getDisplayVal('footerIcp')}
                 onChange={(e) => updateField('footerIcp', e.target.value)}
                 placeholder={t('admin.footer.icpPlaceholder') || ''}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
@@ -1593,10 +1633,10 @@ export default function AdminPage() {
                             className="inline-block w-2 h-2 rounded-full mr-2"
                             style={{ backgroundColor: cat.color }}
                           ></span>
-                          {cat.name}
+                          {getCatName(cat.name)}
                         </td>
                         <td className="py-3 px-2 text-gray-500 max-w-[200px] truncate">
-                          {cat.description || '-'}
+                          {getCatDesc(cat.description, cat.name) || '-'}
                         </td>
                         <td className="py-3 px-2 text-center text-gray-600">{cat._count?.posts || 0}</td>
                         <td className="py-3 px-2 text-gray-500 text-xs">
@@ -1911,19 +1951,19 @@ export default function AdminPage() {
                                       ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                                   }`}
-                                  title={post.commentsLocked ? '已禁止评论，点击允许' : '禁止评论'}
+                                  title={post.commentsLocked ? t('admin.posts.unlockComments') : t('admin.posts.lockComments')}
                                 >
-                                  {post.commentsLocked ? '🔓评' : '🔒评'}
+                                  {post.commentsLocked ? t('admin.posts.commentsUnlockLabel') : t('admin.posts.commentsLockLabel')}
                                 </button>
                                 <button
                                   onClick={() => setPostDeleteConfirm({
                                     open: true,
                                     id: post.id,
-                                    title: post.title || '(无标题)',
+                                    title: post.title || t('admin.posts.noTitle'),
                                   })}
                                   className="px-2 py-0.5 text-xs text-red-600 hover:bg-red-50 rounded transition-colors"
                                 >
-                                  删帖
+                                  {t('admin.posts.delete')}
                                 </button>
                               </>
                             )}
@@ -1937,7 +1977,7 @@ export default function AdminPage() {
                                       ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
                                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                                   }`}
-                                  title={post.isEssence ? '取消加精' : '加精'}
+                                  title={post.isEssence ? t('admin.posts.unessence') : t('admin.posts.essence')}
                                 >
                                   {post.isEssence ? '⭐' : '☆'}
                                 </button>
@@ -1948,7 +1988,7 @@ export default function AdminPage() {
                                       ? 'bg-blue-100 text-blue-700 hover:bg-blue-200'
                                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                                   }`}
-                                  title={post.isPinned ? '取消置顶' : '置顶'}
+                                  title={post.isPinned ? t('admin.posts.unpin') : t('admin.posts.pin')}
                                 >
                                   {post.isPinned ? '📌' : '📍'}
                                 </button>
@@ -1971,7 +2011,7 @@ export default function AdminPage() {
                   onClick={() => fetchPosts(postPagination.page - 1, postSearch, postStatusFilter)}
                   className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
                 >
-                  上一页
+                  {t('feed.prevPage')}
                 </button>
                 {Array.from({ length: postPagination.totalPages }, (_, i) => i + 1).map((p) => (
                   <button
@@ -1991,7 +2031,7 @@ export default function AdminPage() {
                   onClick={() => fetchPosts(postPagination.page + 1, postSearch, postStatusFilter)}
                   className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
                 >
-                  下一页
+                  {t('feed.nextPage')}
                 </button>
               </div>
             )}
@@ -2000,23 +2040,23 @@ export default function AdminPage() {
             {postDeleteConfirm.open && (
               <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">确认删除帖子</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('admin.posts.deleteConfirmTitle')}</h3>
                   <p className="text-sm text-gray-500 mb-4">
-                    确定要删除帖子「<span className="font-medium text-gray-700">{postDeleteConfirm.title}</span>」吗？
+                    {t('admin.posts.deleteConfirmMessage', { title: postDeleteConfirm.title })}
                   </p>
-                  <p className="text-xs text-red-500 mb-4">此操作为软删除，帖子将对用户隐藏。</p>
+                  <p className="text-xs text-red-500 mb-4">{t('admin.posts.softDeleteHint')}</p>
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => setPostDeleteConfirm({ open: false, id: '', title: '' })}
                       className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                     >
-                      取消
+                      {t('admin.posts.cancel')}
                     </button>
                     <button
                       onClick={handleDeletePost}
                       className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                     >
-                      确认删除
+                      {t('admin.posts.confirm')}
                     </button>
                   </div>
                 </div>
@@ -2034,94 +2074,94 @@ export default function AdminPage() {
             <div className="bg-white rounded-xl border border-gray-100 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-bold">V1.0.0</span>
-                <span className="text-sm text-gray-400">Current Version</span>
+                <span className="text-sm text-gray-400">{t('admin.version.currentVersion')}</span>
               </div>
               <div className="prose prose-sm max-w-none text-gray-600 space-y-4">
                 <div>
-                  <h4 className="font-semibold text-gray-800 mb-2">📋 功能列表</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">{t('admin.version.features')}</h4>
                   <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>用户系统</b> — 注册/登录/个人主页/资料编辑</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.userSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>发帖系统</b> — 图文/投票/背景音乐/标签/分类</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.postSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>评论系统</b> — 回复/引用/评论锁定/点赞</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.commentSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>版块管理</b> — 多版块/自定义图标/颜色/排序</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.categoryManagement') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>积分签到</b> — 每日签到/连续奖励/积分规则</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.pointsCheckin') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>勋章系统</b> — 8种成就勋章/自动发放</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.badgeSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>关注收藏</b> — 关注用户/收藏帖子</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.followCollection') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>通知系统</b> — 赞/评论/关注/系统通知</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.notificationSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>管理后台</b> — 站点配置/用户/版块/帖子管理</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.adminPanel') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>头像系统</b> — 注册12款卡通头像/自定义上传</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.avatarSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>文字样式</b> — 全站文字颜色/大小/阴影/特效自定义</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.textStyle') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>首页Hero</b> — 欢迎语/标语/背景渐变/烟花特效</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.heroCustomization') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>版主体系</b> — 管理员/版主分级权限</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.moderatorSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>禁言系统</b> — 临时/永久禁言/自动解封</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.banSystem') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>防刷机制</b> — 发帖冷却/敏感词过滤</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.antiSpam') }} />
                       </div>
                       <div className="flex items-start gap-2">
                         <span className="text-indigo-500 mt-0.5 shrink-0">●</span>
-                        <span><b>全站配置</b> — 站点名/关于页/联系方式/页脚在线编辑</span>
+                        <span dangerouslySetInnerHTML={{ __html: t('admin.version.fullConfig') }} />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-gray-100">
-                  <h4 className="font-semibold text-gray-800 mb-3">🔄 数据同步</h4>
+                  <h4 className="font-semibold text-gray-800 mb-3">{t('admin.version.dataSync')}</h4>
                   <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700">
-                    <p className="mb-1"><b>主副站 10 分钟自动同步</b></p>
-                    <p className="text-blue-500 text-xs">主站与副站每 10 分钟增量同步一次数据（帖子/用户/评论/配置），确保两端数据一致。</p>
+                    <p className="mb-1" dangerouslySetInnerHTML={{ __html: t('admin.version.dataSyncText') }} />
+                    <p className="text-blue-500 text-xs">{t('admin.version.dataSyncDesc')}</p>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-gray-100">
-                  <h4 className="font-semibold text-gray-800 mb-2">🖥 部署信息</h4>
+                  <h4 className="font-semibold text-gray-800 mb-2">{t('admin.version.deployment')}</h4>
                   <div className="bg-amber-50 rounded-lg p-4 text-sm text-amber-700">
-                    <p className="mb-1"><b>💡 提示：</b>您可自行设置主站与副站域名</p>
-                    <p className="text-amber-400 text-xs mt-2">进入 Nginx Proxy Manager 添加/修改域名即可</p>
+                    <p className="mb-1" dangerouslySetInnerHTML={{ __html: t('admin.version.deploymentHint') }} />
+                    <p className="text-amber-400 text-xs mt-2">{t('admin.version.deploymentDesc')}</p>
                   </div>
                 </div>
               </div>

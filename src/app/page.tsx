@@ -36,6 +36,14 @@ const CATEGORY_EN: Record<string, string> = {
   "灌水乐园": "Chat Zone",
 };
 
+const CATEGORY_DESC_EN: Record<string, string> = {
+  "校园生活": "Share campus daily life, cafeteria food, dormitory life, etc.",
+  "学习交流": "Course discussions, study resources, exam experience sharing",
+  "社团活动": "Club recruitment, activity notices, highlights",
+  "游戏讨论区": "Video games, board games, esports discussion",
+  "灌水乐园": "Casual chat, daily banter, light topics",
+};
+
 export default function HomePage() {
   const { data: postsData, error: postsError } = useSWR(
     "/api/posts?limit=5&sort=latest",
@@ -234,7 +242,7 @@ export default function HomePage() {
                     {displayName}
                   </h3>
                   <p className="text-sm text-gray-500 leading-relaxed">
-                    {cat.description || ''}
+                    {lang === 'en' ? (CATEGORY_DESC_EN[cat.name] || cat.description || '') : (cat.description || '')}
                   </p>
                   <div className="mt-4 flex items-center gap-1 text-sm font-medium text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
                     {t('home.browseCategory')} <ArrowRightIcon className="w-4 h-4" />
