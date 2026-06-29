@@ -1,0 +1,260 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  uid          Int      @unique
+  email        String   @unique
+  username     String   @unique
+  nickname     String   @default("")
+  passwordHash String
+  role         String   @default("USER")
+  avatarUrl    String?
+  bio          String?
+  coverUrl     String?
+  grade        String?  @default("")
+  class_       String?  @default("")
+  gender       String   @default("保密")
+  experience   Int      @default(0)
+  level        Int      @default(1)
+  coins        Int      @default(0)
+  birthday     String?  // "MM-DD" format
+  isBanned     Boolean  @default(false)
+  banExpiresAt DateTime?
+  banReason    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  posts         Post[]
+  comments      Comment[]
+  likes         Like[]
+  follows       Follow[]   @relation("FollowerRelation")
+  followers     Follow[]   @relation("FollowingRelation")
+  collections   Collection[]
+  notifications Notification[] @relation("NotificationReceiver")
+  sentNotifications Notification[] @relation("NotificationSender")
+  signinRecords SigninRecord[]
+  badges        UserBadge[]
+  managedCategories Category[] @relation("ModeratorRelation")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  icon        String   @default("📁")
+  color       String   @default("#6366f1")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  
+  posts Post[]
+  moderators User[] @relation("ModeratorRelation")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  type      String   @default("text") // text, image, video, poll
+  images    String   @default("[]") // JSON array of image URLs
+  videos    String   @default("[]") // JSON array of video URLs
+  tags      String   @default("[]") // JSON array
+  isPinned  Boolean  @default(false)
+  isEssence Boolean  @default(false)
+  isTop     Boolean  @default(false)
+  views     Int      @default(0)
+  likesCount Int     @default(0)
+  commentsCount Int  @default(0)
+  coins     Int      @default(0) // price in coins for paid posts
+  status    String   @default("PUBLISHED") // DRAFT, PUBLISHED, HIDDEN, DELETED
+  commentsLocked Boolean @default(false)
+  isPrivate      Boolean @default(false)
+  bgMusic        String  @default("") // JSON: {"url":"...","type":"link|upload","name":"..."}
+
+  author   User     @relation(fields: [authorId], references: [id])
+  authorId String
+  category Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  comments Comment[]
+  likes    Like[]
+  collections Collection[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  images    String   @default("[]")
+  likesCount Int     @default(0)
+  
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String
+  parentId String?
+  replyTo  Comment?  @relation("CommentReply", fields: [replyToId], references: [id])
+  replyToId String?
+  replies  Comment[] @relation("CommentReply")
+  likes    Like[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  follower    User     @relation("FollowerRelation", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("FollowingRelation", fields: [followingId], references: [id])
+  followingId String
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Collection {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // like, comment, follow, system
+  content   String?
+  link      String?
+  isRead    Boolean  @default(false)
+  sender    User?    @relation("NotificationSender", fields: [senderId], references: [id])
+  senderId  String?
+  receiver  User     @relation("NotificationReceiver", fields: [receiverId], references: [id])
+  receiverId String
+  createdAt DateTime @default(now())
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteConfig {
+  id    String @id @default("default")
+  
+  // 关于我们
+  aboutTitle   String @default("关于我们")
+  aboutContent String @default("练川实验学校社区，致力于为师生提供一个交流、分享、成长的平台。")
+  aboutSubtitle String @default("练川实验学校校园社区")
+  aboutImage   String @default("")
+
+  // 联系方式
+  contactPhone   String @default("")
+  contactEmail   String @default("")
+  contactWechat  String @default("")
+  contactQQ      String @default("")
+  contactAddress String @default("")
+  
+  // 首页设置
+  siteTitle    String @default("练川实验学校")
+  siteSubtitle String @default("连接校园，分享成长")
+  siteImage    String @default("")
+
+  // 工具栏设置
+  toolbarTitle String @default("练川实验学校")
+  toolbarLogo  String @default("")
+
+  // 首页欢迎语
+  heroWelcome  String @default("欢迎来到练川实验学校")
+
+  heroTagline1 String @default("在这里，你可以交流学习经验、分享校园生活、参与社团活动")
+  heroTagline2 String @default("让每一天的校园生活都更加精彩")
+  heroJoinTitle String @default("加入练川实验学校社区")
+  heroJoinSubtitle String @default("与全校师生一起交流学习、分享生活，让校园时光更加精彩")
+  footerPoweredBy String @default("练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma")
+
+  // Hero 背景自定义
+  heroBgEnabled  Boolean @default(false)
+  heroBgColor1   String @default("#4f46e5")    // 渐变起始色
+  heroBgColor2   String @default("#7c3aed")    // 渐变中间色
+  heroBgColor3   String @default("#6366f1")    // 渐变结束色
+  heroBgOpacity  String @default("1")          // 整体透明度 0-1
+  heroBgBlur     String @default("0")          // 模糊效果 px
+  heroBgBrightness String @default("1")        // 亮度 0.5-2
+
+  // 烟花特效
+  fireworksDuration Int @default(15)           // 烟花绽放时长（秒），0=关闭
+
+  // 文字样式配置（JSON）
+  textStyles String @default("{}")
+
+  // 页脚信息
+  footerCopyright String @default("© 2024 练川实验学校 All Rights Reserved")
+  footerIcp       String @default("")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  icon        String   @default("🏅")
+  color       String   @default("#6366f1")
+  condition   String   // "signin_7", "signin_30", "posts_10", "points_1000", "essence_3", "likes_50", "register" etc
+  createdAt   DateTime @default(now())
+  
+  users UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  badgeId   String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
+
+model SigninRecord {
+  id          String   @id @default(cuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  date        String   // "YYYY-MM-DD"
+  points      Int      @default(0)
+  streakDays  Int      @default(1)
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, date])
+}
