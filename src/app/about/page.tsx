@@ -9,7 +9,7 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function AboutPage() {
   const { data: siteConfig, error } = useSWR("/api/site-config", fetcher);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
@@ -36,12 +36,12 @@ export default function AboutPage() {
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-12 text-white">
             <h1 className="text-3xl font-bold mb-2">
               <StyledText siteConfig={siteConfig} textKey="aboutTitle">
-                {siteConfig.aboutTitle || t('about.breadcrumbAbout')}
+                {(lang === 'en' || !siteConfig?.aboutTitle) ? t('siteContent.aboutTitle') : siteConfig.aboutTitle}
               </StyledText>
             </h1>
             <p className="text-indigo-100 text-sm">
               <StyledText siteConfig={siteConfig} textKey="aboutSubtitle">
-                {siteConfig.aboutSubtitle || t('about.subtitle')}
+                {(lang === 'en' || !siteConfig?.aboutSubtitle) ? t('siteContent.aboutSubtitle') : siteConfig.aboutSubtitle}
               </StyledText>
             </p>
           </div>
@@ -51,7 +51,7 @@ export default function AboutPage() {
               <div className="mb-8 rounded-xl overflow-hidden shadow-md">
                 <img
                   src={siteConfig.aboutImage}
-                  alt={siteConfig.aboutTitle || t('about.breadcrumbAbout')}
+                  alt={(lang === 'en' || !siteConfig?.aboutTitle) ? t('siteContent.aboutTitle') : siteConfig.aboutTitle}
                   className="w-full object-cover max-h-96"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none'
@@ -61,7 +61,9 @@ export default function AboutPage() {
             )}
 
             <div className="prose prose-gray max-w-none">
-              {siteConfig.aboutContent.split('\n').map((paragraph: string, i: number) => (
+              {(lang === 'en' || !siteConfig?.aboutContent)
+                ? <p className="text-gray-600 leading-relaxed mb-4 text-lg">{t('siteContent.aboutContent')}</p>
+                : siteConfig.aboutContent.split('\n').map((paragraph: string, i: number) => (
                 paragraph.trim() ? (
                   <StyledText key={i} siteConfig={siteConfig} textKey="aboutContent" as="p" className="text-gray-600 leading-relaxed mb-4 text-lg">
                     {paragraph}
@@ -116,7 +118,7 @@ export default function AboutPage() {
               {siteConfig.contactAddress && (
                 <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
                   <span>📍</span>
-                  <span>{siteConfig.contactAddress}</span>
+                  <span>{(lang === 'en' || !siteConfig?.contactAddress) ? t('siteContent.contactAddress') : siteConfig.contactAddress}</span>
                 </div>
               )}
             </div>

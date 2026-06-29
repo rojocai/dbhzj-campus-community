@@ -1,10 +1,10 @@
 {
   "site": {
-    "title": "Dongbaihu Home",
+    "title": "DongBaiHu Home",
     "subtitle": "Connect Campus, Share Growth",
-    "description": "Dongbaihu Home Campus Forum — Exchange Learning, Share Life",
-    "defaultTitle": "Dongbaihu Home - Campus Forum Community",
-    "template": "%s | Dongbaihu Home"
+    "description": "DongBaiHu Home Campus Forum — Exchange Learning, Share Life",
+    "defaultTitle": "DongBaiHu Home - Campus Forum Community",
+    "template": "%s | DongBaiHu Home"
   },
   "nav": {
     "home": "Home",
@@ -23,7 +23,7 @@
     "menuLabel": "Menu"
   },
   "home": {
-    "heroWelcome": "Welcome to Lianchuan Experimental School",
+    "heroWelcome": "Welcome to DongBaiHu Home",
     "heroSubtitle": "Connect Campus, Share Growth",
     "heroTagline1": "Here you can exchange learning experiences, share campus life, and join club activities",
     "heroTagline2": "Make every day on campus more exciting",
@@ -42,7 +42,7 @@
     "viewDetail": "View Details →",
     "announcement": "Announcement",
     "aboutUs": "About Us",
-    "joinTitle": "Join Lianchuan Experimental School Community",
+    "joinTitle": "Join DongBaiHu Home Community",
     "joinSubtitle": "Exchange ideas, share life, and make campus time more wonderful with all teachers and students",
     "registerNow": "Register Now",
     "heroImage": "Homepage Image"
@@ -173,7 +173,7 @@
     }
   },
   "signin": {
-    "title": "Sign in to Lianchuan Experimental School Community",
+    "title": "Sign in to DongBaiHu Home Community",
     "emailLabel": "Email",
     "emailPlaceholder": "Enter your email",
     "passwordLabel": "Password",
@@ -184,7 +184,7 @@
     "signupLink": "Sign Up Now"
   },
   "signup": {
-    "title": "Register for Lianchuan Experimental School Community",
+    "title": "Register for DongBaiHu Home Community",
     "avatarLabel": "Choose Avatar",
     "avatarHint": "Click to select an avatar (optional)",
     "emailLabel": "Email",
@@ -295,7 +295,7 @@
     "breadcrumbAbout": "About Us",
     "loading": "Loading...",
     "loadFailed": "Failed to load, please try again later",
-    "subtitle": "Lianchuan Experimental School Campus Community",
+    "subtitle": "DongBaiHu Home Campus Community",
     "contactTitle": "Contact Us",
     "phone": "Phone",
     "email": "Email",
@@ -367,6 +367,8 @@
       "title": "About Page Settings",
       "aboutTitle": "About Title",
       "aboutSubtitle": "About Subtitle",
+      "aboutSubtitlePlaceholder": "Lianchuan Experimental School Campus Community",
+      "aboutSubtitleHint": "The subtitle displayed below the title",
       "aboutContent": "About Content",
       "aboutImage": "About Image",
       "aboutImagePlaceholder": "https://example.com/about.jpg or click to upload"
@@ -377,12 +379,14 @@
       "email": "Email",
       "wechat": "WeChat",
       "qq": "QQ",
-      "address": "Address"
+      "address": "Address",
+      "addressPlaceholder": "Lianchuan Experimental School"
     },
     "footer": {
       "title": "Footer Info",
       "copyright": "Copyright",
       "icp": "ICP Number",
+      "icpPlaceholder": "ICP License Number",
       "poweredBy": "Powered By"
     },
     "users": {
@@ -426,6 +430,7 @@
       "deleteConfirm": "Confirm delete user {name}? This action cannot be undone!",
       "banned": "Banned",
       "normal": "Normal",
+      "totalPeople": "({total} total)",
       "roles": {
         "ADMIN": "Admin",
         "MODERATOR": "Moderator",
@@ -465,6 +470,11 @@
       "actions": "Actions",
       "cancel": "Cancel",
       "save": "Save",
+      "clickToSelect": "Click to select",
+      "commonIcons": "Common Icons",
+      "emojiPlaceholder": "Or type an emoji",
+      "sortOrderHint": "Sort order (lower numbers appear first)",
+      "confirmDelete": "Confirm Delete",
       "deleteConfirm": "Confirm delete category \"{name}\"?",
       "deleteConfirmText": "Are you sure you want to delete category \"{name}\"? This action cannot be undone.",
       "noCategories": "No categories yet",
@@ -493,6 +503,8 @@
       "postTitle": "Post Title",
       "status": "Status",
       "statusTitle": "Status",
+      "comments": "Comments",
+      "likes": "Likes",
       "created": "Created",
       "actions": "Actions",
       "pin": "Pin",
@@ -549,7 +561,7 @@
     "aboutUs": "About Us",
     "contact": "Contact Us",
     "contactPhone": "Email: admin@dongbaihu.com",
-    "contactAddress": "Address: No.1 Xuefu Road, High-tech Zone, Lianchuan City",
+    "contactAddress": "Address: No.1 Xuefu Road, High-tech Zone, DongBaiHu City",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "poweredBy": "{text}"
@@ -587,5 +599,21 @@
   "language": {
     "switchTo": "切换到中文",
     "current": "English"
+  },
+  "siteContent": {
+    "siteTitle": "DongBaiHu Home",
+    "toolbarTitle": "DongBaiHu Home",
+    "heroWelcome": "Welcome to DongBaiHu Home",
+    "siteSubtitle": "Connect Campus, Share Growth",
+    "heroTagline1": "Here you can exchange learning experiences, share campus life, and join club activities",
+    "heroTagline2": "Make every day on campus more exciting",
+    "heroJoinTitle": "Join DongBaiHu Home Community",
+    "heroJoinSubtitle": "Exchange ideas, share life, and make campus time more wonderful",
+    "aboutTitle": "About Us",
+    "aboutSubtitle": "DongBaiHu Home Campus Community",
+    "aboutContent": "DongBaiHu Home community, dedicated to providing a platform for students and teachers to exchange, share, and grow.",
+    "footerCopyright": "© 2024 DongBaiHu Home All Rights Reserved",
+    "footerPoweredBy": "DongBaiHu Home Campus Community v1.0 | Powered by Next.js & Prisma",
+    "contactAddress": "No.1 Xuefu Road, High-tech Zone, DongBaiHu City"
   }
 }

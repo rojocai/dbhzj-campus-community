@@ -21,10 +21,10 @@ export default function Header() {
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: siteConfig } = useSWR("/api/site-config", fetcher);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const user = session?.user as any;
-  const siteTitle = siteConfig?.toolbarTitle || siteConfig?.siteTitle || t('site.title');
+  const siteTitle = (lang === 'en') ? t('siteContent.toolbarTitle') : (siteConfig?.toolbarTitle || siteConfig?.siteTitle || t('site.title'));
   const toolbarLogo = siteConfig?.toolbarLogo || '';
   const logoInitial = toolbarLogo ? '' : (siteTitle.charAt(0));
 

@@ -23,7 +23,7 @@
     "menuLabel": "菜单"
   },
   "home": {
-    "heroWelcome": "欢迎来到练川实验学校",
+    "heroWelcome": "欢迎来到东白湖之家",
     "heroSubtitle": "连接校园，分享成长",
     "heroTagline1": "在这里，你可以交流学习经验、分享校园生活、参与社团活动",
     "heroTagline2": "让每一天的校园生活都更加精彩",
@@ -42,7 +42,7 @@
     "viewDetail": "查看详情 →",
     "announcement": "公告",
     "aboutUs": "关于我们",
-    "joinTitle": "加入练川实验学校社区",
+    "joinTitle": "加入东白湖之家社区",
     "joinSubtitle": "与全校师生一起交流学习、分享生活，让校园时光更加精彩",
     "registerNow": "立即注册",
     "heroImage": "首页图片"
@@ -173,7 +173,7 @@
     }
   },
   "signin": {
-    "title": "登录练川实验学校社区",
+    "title": "登录东白湖之家社区",
     "emailLabel": "邮箱",
     "emailPlaceholder": "请输入邮箱",
     "passwordLabel": "密码",
@@ -184,7 +184,7 @@
     "signupLink": "立即注册"
   },
   "signup": {
-    "title": "注册练川实验学校社区",
+    "title": "注册东白湖之家社区",
     "avatarLabel": "选择头像",
     "avatarHint": "点击选择一个头像（可选）",
     "emailLabel": "邮箱",
@@ -295,7 +295,7 @@
     "breadcrumbAbout": "关于我们",
     "loading": "加载中...",
     "loadFailed": "加载失败，请稍后再试",
-    "subtitle": "练川实验学校校园社区",
+    "subtitle": "东白湖之家校园社区",
     "contactTitle": "联系我们",
     "phone": "电话",
     "email": "邮箱",
@@ -367,6 +367,8 @@
       "title": "关于我们页面设置",
       "aboutTitle": "关于我们标题",
       "aboutSubtitle": "关于我们副标题",
+      "aboutSubtitlePlaceholder": "练川实验学校校园社区",
+      "aboutSubtitleHint": "显示在标题下方的副标题",
       "aboutContent": "关于我们内容",
       "aboutImage": "关于我们图片",
       "aboutImagePlaceholder": "https://example.com/about.jpg 或点击上传"
@@ -377,12 +379,14 @@
       "email": "邮箱",
       "wechat": "微信",
       "qq": "QQ",
-      "address": "地址"
+      "address": "地址",
+      "addressPlaceholder": "练川市实验学校"
     },
     "footer": {
       "title": "页脚信息",
       "copyright": "版权信息",
       "icp": "ICP备案号",
+      "icpPlaceholder": "京ICP备xxxxxxxx号",
       "poweredBy": "技术支持"
     },
     "users": {
@@ -426,6 +430,7 @@
       "deleteConfirm": "确认删除用户 {name}？此操作不可撤销！",
       "banned": "已禁言",
       "normal": "正常",
+      "totalPeople": "（共{total}人）",
       "roles": {
         "ADMIN": "管理员",
         "MODERATOR": "版主",
@@ -465,6 +470,11 @@
       "actions": "操作",
       "cancel": "取消",
       "save": "保存",
+      "clickToSelect": "点击选择",
+      "commonIcons": "常用图标",
+      "emojiPlaceholder": "或手动输入 Emoji",
+      "sortOrderHint": "排序序号（数字越小越靠前）",
+      "confirmDelete": "确认删除",
       "deleteConfirm": "确认删除版块「{name}」？",
       "deleteConfirmText": "确定要删除版块「{name}」吗？此操作不可恢复。",
       "noCategories": "暂无版块",
@@ -493,6 +503,8 @@
       "postTitle": "帖子标题",
       "status": "状态",
       "statusTitle": "状态",
+      "comments": "评论",
+      "likes": "点赞",
       "created": "创建时间",
       "actions": "操作",
       "pin": "置顶",
@@ -549,7 +561,7 @@
     "aboutUs": "关于我们",
     "contact": "联系方式",
     "contactPhone": "邮箱: admin@dongbaihu.com",
-    "contactAddress": "地址: 练川市高新区学府路1号",
+    "contactAddress": "地址: 东白湖市高新区学府路1号",
     "privacy": "隐私政策",
     "terms": "服务条款",
     "poweredBy": "{text}"
@@ -587,5 +599,21 @@
   "language": {
     "switchTo": "Switch to English",
     "current": "中文"
+  },
+  "siteContent": {
+    "siteTitle": "东白湖之家",
+    "toolbarTitle": "东白湖之家",
+    "heroWelcome": "欢迎来到东白湖之家",
+    "siteSubtitle": "连接校园，分享成长",
+    "heroTagline1": "在这里，你可以交流学习经验、分享校园生活、参与社团活动",
+    "heroTagline2": "让每一天的校园生活都更加精彩",
+    "heroJoinTitle": "加入东白湖之家社区",
+    "heroJoinSubtitle": "与全校师生一起交流学习、分享生活，让校园时光更加精彩",
+    "aboutTitle": "关于我们",
+    "aboutSubtitle": "东白湖之家校园社区",
+    "aboutContent": "东白湖之家社区，致力于为师生提供一个交流、分享、成长的平台。",
+    "footerCopyright": "© 2024 东白湖之家 All Rights Reserved",
+    "footerPoweredBy": "东白湖之家校园社区 v1.0 | Powered by Next.js & Prisma",
+    "contactAddress": "东白湖市高新区学府路1号"
   }
 }

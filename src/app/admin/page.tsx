@@ -71,28 +71,28 @@ interface PaginationInfo {
   totalPages: number
 }
 
-const defaultConfig: SiteConfig = {
-  aboutTitle: '关于我们',
-  aboutContent: '练川实验学校社区，致力于为师生提供一个交流、分享、成长的平台。',
+const createDefaultConfig = (t: (key: string) => string): SiteConfig => ({
+  aboutTitle: t('siteContent.aboutTitle'),
+  aboutContent: t('siteContent.aboutContent'),
   aboutImage: '',
   contactPhone: '',
   contactEmail: '',
   contactWechat: '',
   contactQQ: '',
-  contactAddress: '',
-  footerCopyright: '© 2024 练川实验学校 All Rights Reserved',
+  contactAddress: t('siteContent.contactAddress'),
+  footerCopyright: t('siteContent.footerCopyright'),
   footerIcp: '',
-  siteTitle: '练川实验学校',
-  siteSubtitle: 'Connect Campus, Share Growth',
+  siteTitle: t('siteContent.siteTitle'),
+  siteSubtitle: t('siteContent.siteSubtitle'),
   siteImage: '',
-  footerPoweredBy: 'Dongbaihu Home v1.0 | Powered by Next.js & Prisma',
-  heroWelcome: 'Welcome to Lianchuan Experimental School',
-  toolbarTitle: '练川实验学校',
+  footerPoweredBy: t('siteContent.footerPoweredBy'),
+  heroWelcome: t('siteContent.heroWelcome'),
+  toolbarTitle: t('siteContent.toolbarTitle'),
   toolbarLogo: '',
-  heroTagline1: 'Exchange learning experiences, share campus life, join activities',
-  heroTagline2: 'Make every campus day more exciting',
-  heroJoinTitle: 'Join Lianchuan Experimental School Community',
-  heroJoinSubtitle: 'Exchange ideas, share life, make campus time wonderful',
+  heroTagline1: t('siteContent.heroTagline1'),
+  heroTagline2: t('siteContent.heroTagline2'),
+  heroJoinTitle: t('siteContent.heroJoinTitle'),
+  heroJoinSubtitle: t('siteContent.heroJoinSubtitle'),
   heroBgEnabled: false,
   heroBgColor1: '#4f46e5',
   heroBgColor2: '#7c3aed',
@@ -102,7 +102,7 @@ const defaultConfig: SiteConfig = {
   heroBgBrightness: '1',
   fireworksDuration: 15,
   textStyles: '{}',
-}
+})
 
 const EMOJI_LIST = [
   '🏫', '📚', '🎭', '🎮', '💧', '📖', '✏️', '🎨',
@@ -121,7 +121,7 @@ export default function AdminPage() {
   const { t, lang } = useLang()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'about' | 'contact' | 'footer' | 'home' | 'users' | 'categories' | 'posts'>('about')
-  const [config, setConfig] = useState<SiteConfig>(defaultConfig)
+  const [config, setConfig] = useState<SiteConfig>(createDefaultConfig(t))
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(true)
@@ -868,13 +868,13 @@ export default function AdminPage() {
                 placeholder={t('admin.home.poweredByPlaceholder')}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">显示在页脚底部的技术提供信息</p>
+              <p className="text-xs text-gray-400 mt-1">{t('admin.home.poweredByHint')}</p>
             </div>
 
-            {/* Hero 背景自定义 */}
+            {/* Hero Background Customization */}
             <div className="border border-gray-200 rounded-xl p-5 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900">Hero 背景自定义</h3>
+                <h3 className="text-sm font-semibold text-gray-900">{t('admin.home.heroBgSection')}</h3>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -885,7 +885,7 @@ export default function AdminPage() {
                   <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
               </div>
-              <p className="text-xs text-gray-400">开启后可自定义首页背景渐变颜色、透明度、模糊和亮度</p>
+              <p className="text-xs text-gray-400">{t('admin.home.heroBgHint')}</p>
 
               {config.heroBgEnabled && (
                 <>
@@ -1089,10 +1089,10 @@ export default function AdminPage() {
                 type="text"
                 value={config.aboutSubtitle}
                 onChange={(e) => updateField('aboutSubtitle', e.target.value)}
-                placeholder="练川实验学校校园社区"
+                placeholder={t('admin.aboutTab.aboutSubtitlePlaceholder') || ''}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
-              <p className="text-xs text-gray-400 mt-1">显示在标题下方的副标题</p>
+              <p className="text-xs text-gray-400 mt-1">{t('admin.aboutTab.aboutSubtitleHint')}</p>
               <button
                 type="button"
                 onClick={() => setOpenStylePanels(p => ({ ...p, aboutSubtitle: !p.aboutSubtitle }))}
@@ -1128,7 +1128,7 @@ export default function AdminPage() {
                   type="text"
                   value={config.aboutImage}
                   onChange={(e) => updateField('aboutImage', e.target.value)}
-                  placeholder="https://example.com/image.jpg 或点击上方上传"
+                  placeholder={t('admin.aboutTab.aboutImagePlaceholder')}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                 />
                 <label className="shrink-0 cursor-pointer px-4 py-2.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors text-sm font-medium">
@@ -1233,7 +1233,7 @@ export default function AdminPage() {
                   type="text"
                   value={config.contactAddress}
                   onChange={(e) => updateField('contactAddress', e.target.value)}
-                  placeholder="练川市实验学校"
+                  placeholder={t('admin.contact.addressPlaceholder') || ''}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                 />
               </div>
@@ -1266,7 +1266,7 @@ export default function AdminPage() {
                 type="text"
                 value={config.footerIcp}
                 onChange={(e) => updateField('footerIcp', e.target.value)}
-                placeholder="京ICP备xxxxxxxx号"
+                placeholder={t('admin.footer.icpPlaceholder') || ''}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               />
             </div>
@@ -1440,7 +1440,7 @@ export default function AdminPage() {
                   {t("feed.prevPage")}
                 </button>
                 <span className="px-3 py-1 text-sm text-gray-500">
-                  {userPagination.page} / {userPagination.totalPages} (共{userPagination.total}人)
+                  {userPagination.page} / {userPagination.totalPages} {t('admin.users.totalPeople', { total: userPagination.total })}
                 </span>
                 <button
                   onClick={() => fetchUsers(userPagination.page + 1, userSearch)}
@@ -1651,7 +1651,7 @@ export default function AdminPage() {
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">名称 *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.categories.name')} *</label>
                       <input
                         type="text"
                         value={categoryForm.name}
@@ -1663,7 +1663,7 @@ export default function AdminPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">描述</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.categories.description')}</label>
                       <input
                         type="text"
                         value={categoryForm.description}
@@ -1676,18 +1676,18 @@ export default function AdminPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">图标</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.categories.icon')}</label>
                         <div className="relative emoji-picker-container">
                           <div
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm flex items-center gap-2 cursor-pointer hover:border-indigo-400 transition-colors"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                           >
                             <span className="text-xl">{categoryForm.icon}</span>
-                            <span className="text-gray-400 text-xs">点击选择</span>
+                            <span className="text-gray-400 text-xs">{t('admin.categories.clickToSelect')}</span>
                           </div>
                           {showEmojiPicker && (
                             <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-72">
-                              <div className="text-xs text-gray-400 mb-2">常用图标</div>
+                              <div className="text-xs text-gray-400 mb-2">{t('admin.categories.commonIcons')}</div>
                               <div className="grid grid-cols-8 gap-1">
                                 {EMOJI_LIST.map((emoji) => (
                                   <button
@@ -1712,7 +1712,7 @@ export default function AdminPage() {
                                   onChange={(e) =>
                                     setCategoryForm((prev) => ({ ...prev, icon: e.target.value }))
                                   }
-                                  placeholder="或手动输入 Emoji"
+                                  placeholder={t('admin.categories.emojiPlaceholder')}
                                   maxLength={2}
                                   className="w-full px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
                                 />
@@ -1722,7 +1722,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">颜色</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.categories.color')}</label>
                         <div className="flex items-center gap-2">
                           <input
                             type="color"
@@ -1745,7 +1745,7 @@ export default function AdminPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        排序序号（数字越小越靠前）
+                        {t('admin.categories.sortOrderHint')}
                       </label>
                       <input
                         type="number"
@@ -1765,13 +1765,13 @@ export default function AdminPage() {
                       onClick={() => setCategoryForm((prev) => ({ ...prev, open: false }))}
                       className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                     >
-                      取消
+                      {t('admin.categories.cancel')}
                     </button>
                     <button
                       onClick={handleCategorySave}
                       className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                     >
-                      {categoryForm.mode === 'create' ? '创建' : '保存'}
+                      {categoryForm.mode === 'create' ? t('admin.categories.create') : t('admin.categories.save')}
                     </button>
                   </div>
                 </div>
@@ -1782,7 +1782,7 @@ export default function AdminPage() {
             {deleteConfirm.open && (
               <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">确认删除</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('admin.categories.deleteConfirm')}</h3>
                   <p className="text-sm text-gray-500 mb-4">
                     {t("admin.categories.deleteConfirmText", { name: deleteConfirm.name })}
                   </p>
@@ -1791,13 +1791,13 @@ export default function AdminPage() {
                       onClick={() => setDeleteConfirm({ open: false, id: '', name: '' })}
                       className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                     >
-                      取消
+                      {t('admin.categories.cancel')}
                     </button>
                     <button
                       onClick={handleDeleteCategory}
                       className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                     >
-                      确认删除
+                      {t('admin.categories.confirmDelete')}
                     </button>
                   </div>
                 </div>
@@ -1849,7 +1849,7 @@ export default function AdminPage() {
 
             {/* Posts Table */}
             {postsLoading ? (
-              <div className="text-center py-10 text-gray-400 text-sm">加载中...</div>
+              <div className="text-center py-10 text-gray-400 text-sm">{t('admin.loading')}</div>
             ) : posts.length === 0 ? (
               <div className="text-center py-10 text-gray-400 text-sm">{t("admin.posts.noPosts")}</div>
             ) : (
@@ -1860,8 +1860,8 @@ export default function AdminPage() {
                       <th className="text-left py-3 px-2 font-medium text-gray-500">{t("admin.posts.postTitle")}</th>
                       <th className="text-left py-3 px-2 font-medium text-gray-500 w-24">{t("admin.posts.author")}</th>
                       <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">{t("admin.posts.statusTitle")}</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">评论</th>
-                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">点赞</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">{t('admin.posts.comments')}</th>
+                      <th className="text-center py-3 px-2 font-medium text-gray-500 w-16">{t('admin.posts.likes')}</th>
                       <th className="text-left py-3 px-2 font-medium text-gray-500 w-28">{t("admin.posts.created")}</th>
                       <th className="text-center py-3 px-2 font-medium text-gray-500 w-32">{t("admin.posts.actions")}</th>
                     </tr>
@@ -1874,7 +1874,7 @@ export default function AdminPage() {
                             {post.isEssence && <span className="text-xs">⭐</span>}
                             {post.isPinned && <span className="text-xs">📌</span>}
                             <span className={`truncate max-w-xs inline-block ${post.status === 'DELETED' ? 'text-gray-400 line-through' : 'text-gray-800'}`}>
-                              {post.title || '(无标题)'}
+                              {post.title || t('admin.posts.untitled')}
                             </span>
                             {post.category && (
                               <span
@@ -1887,7 +1887,7 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td className="py-3 px-2 text-gray-500">
-                          {post.author?.nickname || post.author?.username || '未知'}
+                          {post.author?.nickname || post.author?.username || t('admin.posts.unknown')}
                         </td>
                         <td className="py-3 px-2 text-center">
                           <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${postStatusColor(post.status)}`}>

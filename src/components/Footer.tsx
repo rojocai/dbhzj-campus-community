@@ -9,7 +9,7 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function Footer() {
   const { data: siteConfig } = useSWR("/api/site-config", fetcher);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const contacts = [
     { key: 'contactPhone', label: t('about.phone'), icon: PhoneIcon, value: siteConfig?.contactPhone },
@@ -18,7 +18,7 @@ export default function Footer() {
     { key: 'contactQQ', label: t('about.qq'), icon: ChatBubbleOvalLeftIcon, value: siteConfig?.contactQQ },
   ].filter((c) => c.value);
 
-  const siteTitle = siteConfig?.siteTitle || t('site.title');
+  const siteTitle = (lang === 'en') ? t('siteContent.toolbarTitle') : (siteConfig?.siteTitle || t('site.title'));
 
   return (
     <footer className="bg-[#1e293b] text-gray-300 mt-auto">
@@ -38,7 +38,7 @@ export default function Footer() {
               {t('footer.description', { siteTitle })}
             </p>
             <p className="text-sm text-gray-500 mt-3">
-              {siteConfig?.footerCopyright || t('footer.copyright', { year: new Date().getFullYear(), siteTitle })}
+              {(lang === 'en' || !siteConfig?.footerCopyright) ? t('siteContent.footerCopyright') : siteConfig.footerCopyright}
             </p>
             {siteConfig?.footerIcp && (
               <p className="text-xs text-gray-500 mt-1">{siteConfig.footerIcp}</p>
@@ -93,16 +93,16 @@ export default function Footer() {
               </ul>
             )}
             {siteConfig?.contactAddress && (
-              <p className="text-xs text-gray-500 mt-3">{siteConfig.contactAddress}</p>
+              <p className="text-xs text-gray-500 mt-3">{(lang === 'en' || !siteConfig?.contactAddress) ? t('siteContent.contactAddress') : siteConfig.contactAddress}</p>
             )}
           </div>
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            {siteConfig?.footerPoweredBy
-              ? t('footer.poweredBy', { text: siteConfig.footerPoweredBy })
-              : t('footer.poweredBy', { text: '练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma' })}
+            {(lang === 'en' || !siteConfig?.footerPoweredBy)
+              ? t('siteContent.footerPoweredBy')
+              : t('footer.poweredBy', { text: siteConfig.footerPoweredBy })}
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
             <Link href="/about" className="hover:text-gray-300">{t('about.privacy')}</Link>

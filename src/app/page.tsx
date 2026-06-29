@@ -88,20 +88,20 @@ export default function HomePage() {
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white/90 font-medium whitespace-nowrap text-xs sm:text-sm">
                 <SparklesIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                 <StyledText siteConfig={siteConfig} textKey="heroTitle">
-                  {(lang === 'en' || !siteConfig?.heroWelcome) ? t('home.heroWelcome') : siteConfig.heroWelcome}
+                  {(lang === 'en' || !siteConfig?.heroWelcome) ? t('siteContent.heroWelcome') : siteConfig.heroWelcome}
                 </StyledText>
               </div>
             </div>
             <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               <StyledText siteConfig={siteConfig} textKey="heroSubtitle" as="span">
-                {(lang === 'en' || !siteConfig?.siteSubtitle) ? t('home.heroSubtitle') : siteConfig.siteSubtitle.replace(/[，,]\\s*/g, '，\\n')}
+                {(lang === 'en' || !siteConfig?.siteSubtitle) ? t('siteContent.siteSubtitle') : siteConfig.siteSubtitle.replace(/[，,]\s*/g, '，\\n')}
               </StyledText>
             </h1>
             {siteConfig?.siteImage && (
               <div className="mb-8 flex justify-center">
                 <img
                   src={siteConfig.siteImage}
-                  alt={siteConfig?.siteTitle || t('home.heroImage')}
+                  alt={siteConfig?.siteTitle || t('siteContent.siteTitle')}
                   className="max-w-full max-h-64 rounded-2xl shadow-lg object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none'
@@ -111,11 +111,11 @@ export default function HomePage() {
             )}
             <p className="text-lg md:text-xl text-indigo-100 max-w-2xl mx-auto mb-10 leading-relaxed">
               <StyledText siteConfig={siteConfig} textKey="heroTagline1">
-                {(lang === 'en' || !siteConfig?.heroTagline1) ? t('home.heroTagline1') : siteConfig.heroTagline1}
+                {(lang === 'en' || !siteConfig?.heroTagline1) ? t('siteContent.heroTagline1') : siteConfig.heroTagline1}
               </StyledText>
               <br />
               <StyledText siteConfig={siteConfig} textKey="heroTagline2">
-                {(lang === 'en' || !siteConfig?.heroTagline2) ? t('home.heroTagline2') : siteConfig.heroTagline2}
+                {(lang === 'en' || !siteConfig?.heroTagline2) ? t('siteContent.heroTagline2') : siteConfig.heroTagline2}
               </StyledText>
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -410,7 +410,7 @@ export default function HomePage() {
                 <div className="md:w-1/2 shrink-0">
                   <img
                     src={siteConfig.aboutImage}
-                    alt={siteConfig.aboutTitle || t('home.aboutUs')}
+                    alt={siteConfig.aboutTitle || t('siteContent.aboutTitle')}
                     className="w-full rounded-2xl shadow-lg object-cover max-h-96"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none'
@@ -421,10 +421,10 @@ export default function HomePage() {
               <div className={siteConfig.aboutImage ? 'md:w-1/2' : 'w-full max-w-3xl mx-auto text-center'}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mb-4">
                   <InformationCircleIcon className="w-4 h-4" />
-                  {(lang === 'en' || !siteConfig?.aboutTitle) ? t('home.aboutUs') : siteConfig.aboutTitle}
+                  {(lang === 'en' || !siteConfig?.aboutTitle) ? t('siteContent.aboutTitle') : siteConfig.aboutTitle}
                 </div>
                 <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
-                  {siteConfig.aboutContent}
+                  {(lang === 'en' || !siteConfig?.aboutContent) ? t('siteContent.aboutContent') : siteConfig.aboutContent}
                 </p>
               </div>
             </div>
@@ -441,12 +441,12 @@ export default function HomePage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             <StyledText siteConfig={siteConfig} textKey="heroJoinTitle">
-              {(lang === 'en' || !siteConfig?.heroJoinTitle) ? t('home.joinTitle') : siteConfig.heroJoinTitle}
+              {(lang === 'en' || !siteConfig?.heroJoinTitle) ? t('siteContent.heroJoinTitle') : siteConfig.heroJoinTitle}
             </StyledText>
           </h2>
           <p className="text-lg text-indigo-100 mb-8 max-w-xl mx-auto">
             <StyledText siteConfig={siteConfig} textKey="heroJoinSubtitle">
-              {(lang === 'en' || !siteConfig?.heroJoinSubtitle) ? t('home.joinSubtitle') : siteConfig.heroJoinSubtitle}
+              {(lang === 'en' || !siteConfig?.heroJoinSubtitle) ? t('siteContent.heroJoinSubtitle') : siteConfig.heroJoinSubtitle}
             </StyledText>
           </p>
           <Link
