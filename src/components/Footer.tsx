@@ -3,18 +3,22 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { PhoneIcon, EnvelopeIcon, ChatBubbleLeftIcon, ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function Footer() {
   const { data: siteConfig } = useSWR("/api/site-config", fetcher);
+  const { t } = useLang();
 
   const contacts = [
-    { key: 'contactPhone', label: '电话', icon: PhoneIcon, value: siteConfig?.contactPhone },
-    { key: 'contactEmail', label: '邮箱', icon: EnvelopeIcon, value: siteConfig?.contactEmail },
-    { key: 'contactWechat', label: '微信', icon: ChatBubbleLeftIcon, value: siteConfig?.contactWechat },
-    { key: 'contactQQ', label: 'QQ', icon: ChatBubbleOvalLeftIcon, value: siteConfig?.contactQQ },
+    { key: 'contactPhone', label: t('about.phone'), icon: PhoneIcon, value: siteConfig?.contactPhone },
+    { key: 'contactEmail', label: t('about.email'), icon: EnvelopeIcon, value: siteConfig?.contactEmail },
+    { key: 'contactWechat', label: t('about.wechat'), icon: ChatBubbleLeftIcon, value: siteConfig?.contactWechat },
+    { key: 'contactQQ', label: t('about.qq'), icon: ChatBubbleOvalLeftIcon, value: siteConfig?.contactQQ },
   ].filter((c) => c.value);
+
+  const siteTitle = siteConfig?.siteTitle || t('site.title');
 
   return (
     <footer className="bg-[#1e293b] text-gray-300 mt-auto">
@@ -24,17 +28,17 @@ export default function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
-                {(siteConfig?.siteTitle || '东白湖之家').charAt(0)}
+                {siteTitle.charAt(0)}
               </div>
               <span className="text-lg font-bold text-white">
-                {siteConfig?.siteTitle || '东白湖之家'}
+                {siteTitle}
               </span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed max-w-md">
-              {siteConfig?.siteTitle || '东白湖之家'}校园社区平台，致力于为全校师生提供交流学习、分享生活的便捷空间。
+              {t('footer.description', { siteTitle })}
             </p>
             <p className="text-sm text-gray-500 mt-3">
-              {siteConfig?.footerCopyright || `© ${new Date().getFullYear()} 东白湖之家 版权所有`}
+              {siteConfig?.footerCopyright || t('footer.copyright', { year: new Date().getFullYear(), siteTitle })}
             </p>
             {siteConfig?.footerIcp && (
               <p className="text-xs text-gray-500 mt-1">{siteConfig.footerIcp}</p>
@@ -44,22 +48,22 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              快速链接
+              {t('footer.quickLinks')}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/feed" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  校园广场
+                  {t('footer.campusFeed')}
                 </Link>
               </li>
               <li>
                 <Link href="/create" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  发布帖子
+                  {t('footer.publishPost')}
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  关于我们
+                  {t('footer.aboutUs')}
                 </Link>
               </li>
             </ul>
@@ -68,7 +72,7 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-              联系方式
+              {t('footer.contact')}
             </h3>
             {contacts.length > 0 ? (
               <ul className="space-y-3 text-sm text-gray-400">
@@ -84,8 +88,8 @@ export default function Footer() {
               </ul>
             ) : (
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>邮箱: admin@dongbaihu.com</li>
-                <li>地址: 练川市高新区学府路1号</li>
+                <li>{t('footer.contactPhone')}</li>
+                <li>{t('footer.contactAddress')}</li>
               </ul>
             )}
             {siteConfig?.contactAddress && (
@@ -96,11 +100,13 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
-            {siteConfig?.footerPoweredBy || '练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma'}
+            {siteConfig?.footerPoweredBy
+              ? t('footer.poweredBy', { text: siteConfig.footerPoweredBy })
+              : t('footer.poweredBy', { text: '练川实验学校校园社区 v1.0 | Powered by Next.js & Prisma' })}
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <Link href="/about" className="hover:text-gray-300">隐私政策</Link>
-            <Link href="/about" className="hover:text-gray-300">服务条款</Link>
+            <Link href="/about" className="hover:text-gray-300">{t('about.privacy')}</Link>
+            <Link href="/about" className="hover:text-gray-300">{t('about.terms')}</Link>
           </div>
         </div>
       </div>

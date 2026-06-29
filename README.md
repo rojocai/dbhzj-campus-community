@@ -155,3 +155,62 @@ sudo bash install-campus.sh
 ## 📄 License
 
 MIT License
+
+---
+
+## 🇬🇧 English Version
+
+# 🏠 Dongbaihu Home Campus Forum
+
+> A full-featured campus community system built with Next.js 16 + Prisma 5 + SQLite. Perfect for schools, classes, and clubs to build an internal communication platform.
+
+## ✨ Features
+
+### 👤 User System
+- Registration, login, logout (NextAuth v4 + Credentials)
+- Profile page: avatar, cover, bio, grade, class, gender, birthday
+- Level/experience system, coin system
+- Achievement badge system (auto-detected triggers)
+- Daily check-in (streak rewards)
+- Follow/follower system
+
+### 📝 Posts
+- Create posts (text, image gallery, video, poll)
+- Post categories (custom icons and colors)
+- Like, favorite, comment (threaded replies)
+- Pin, mark as essence, lock comments
+- Public/private/hidden visibility
+- Paid posts (coin purchase)
+
+### 👑 Admin Panel
+- User management (search, ban, password change)
+- Post management (delete, pin, mark essence)
+- Category management (CRUD + sorting)
+- Announcement management
+- Site configuration (About Us, Contact, Footer, Hero, Fireworks, Text Styles)
+
+### 🌐 Live Demo
+- **Homepage**: [https://780417.xyz](https://780417.xyz)
+- **Admin Panel**: [https://780417.xyz/admin](https://780417.xyz/admin)
+- **Admin Account**: `admin@dongbaihu.com` / `admin123`
+- ⏰ Database resets daily at 00:00 UTC+8
+
+### 🔧 Tech Stack
+- **Framework**: Next.js 16 (App Router)
+- **Database**: Prisma 5 + SQLite
+- **Auth**: NextAuth v4 (JWT)
+- **Frontend**: React 19 + Tailwind CSS 4 + Heroicons
+- **Data Fetching**: SWR
+- **Multi-language**: Built-in Chinese + English, toggle anytime
+
+### 🚀 Quick Deploy
+
+```bash
+bash <(curl -fsSL https://github.com/rojocai/dbhzj-campus-community/releases/download/v1.0.0/install-campus.sh)
+```
+
+See [install-campus.sh](install-campus.sh) for one-click deployment across all Linux distros.
+
+---
+
+[中文版文档](README.md) | [English Version](README.md#english-version)

@@ -9,18 +9,20 @@ import {
   ArrowPathIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-const sortOptions = [
-  { value: "latest", label: "最新" },
-  { value: "hot", label: "最热" },
-  { value: "essence", label: "精华" },
+const getSortOptions = (t: (key: string) => string) => [
+  { value: "latest", label: t('feed.sortLatest') },
+  { value: "hot", label: t('feed.sortHot') },
+  { value: "essence", label: t('feed.sortEssence') },
 ];
 
 export default function FeedPage() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "";
+  const { t, lang } = useLang();
 
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [activeSort, setActiveSort] = useState("latest");
@@ -55,12 +57,14 @@ export default function FeedPage() {
     setPage(1);
   }, [activeCategory, activeSort, searchQuery]);
 
+  const sortOptions = getSortOptions(t);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">校园广场</h1>
-        <p className="text-gray-500">发现校园新鲜事，参与精彩讨论</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('feed.title')}</h1>
+        <p className="text-gray-500">{t('feed.subtitle')}</p>
       </div>
 
       {/* Search Bar */}
@@ -68,7 +72,7 @@ export default function FeedPage() {
         <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         <input
           type="text"
-          placeholder="搜索帖子..."
+          placeholder={t('feed.searchPlaceholder')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
@@ -85,7 +89,7 @@ export default function FeedPage() {
               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
           }`}
         >
-          全部
+          {t('feed.allCategories')}
         </button>
         {categories.map((cat: any) => (
           <button
@@ -123,13 +127,13 @@ export default function FeedPage() {
           <button
             onClick={() => mutate()}
             className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
-            title="刷新"
+            title={t('feed.refresh')}
           >
             <ArrowPathIcon className="w-4 h-4" />
           </button>
           {pagination.total > 0 && (
             <span className="text-xs text-gray-400">
-              共 {pagination.total} 篇
+              {t('feed.totalPosts', { count: pagination.total })}
             </span>
           )}
         </div>
@@ -159,12 +163,12 @@ export default function FeedPage() {
       {/* Error State */}
       {error && !isLoading && (
         <div className="text-center py-16">
-          <p className="text-gray-400 text-lg mb-4">加载失败，请稍后再试</p>
+          <p className="text-gray-400 text-lg mb-4">{t('feed.loadFailed')}</p>
           <button
             onClick={() => mutate()}
             className="px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
           >
-            重新加载
+            {t('feed.reload')}
           </button>
         </div>
       )}
@@ -174,18 +178,18 @@ export default function FeedPage() {
         <div className="text-center py-20">
           <div className="text-6xl mb-4">📭</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            暂无帖子
+            {t('feed.noPosts')}
           </h3>
           <p className="text-gray-500 mb-6">
             {searchQuery
-              ? "没有找到匹配的帖子，试试其他关键词"
-              : "还没有人发帖，快来发布第一条吧！"}
+              ? t('feed.noPostsMatch')
+              : t('feed.noPostsYet')}
           </p>
           <Link
             href="/create"
             className="inline-block px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
           >
-            发布帖子
+            {t('feed.createPost')}
           </Link>
         </div>
       )}
@@ -225,7 +229,7 @@ export default function FeedPage() {
                       {post.author?.nickname || post.author?.username}
                     </Link>
                     <p className="text-xs text-gray-400">
-                      {new Date(post.createdAt).toLocaleDateString("zh-CN", {
+                      {new Date(post.createdAt).toLocaleDateString(lang === 'en' ? 'en-US' : "zh-CN", {
                         month: "short",
                         day: "numeric",
                       })}
@@ -233,12 +237,12 @@ export default function FeedPage() {
                   </div>
                   {post.isEssence && (
                     <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium shrink-0">
-                      精华
+                      {t('feed.essence')}
                     </span>
                   )}
                   {post.isPinned && (
                     <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium shrink-0">
-                      置顶
+                      {t('feed.pinned')}
                     </span>
                   )}
                 </div>
@@ -325,7 +329,7 @@ export default function FeedPage() {
                 disabled={page <= 1}
                 className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
               >
-                上一页
+                {t('feed.prevPage')}
               </button>
               {Array.from(
                 { length: Math.min(pagination.totalPages, 5) },
@@ -362,7 +366,7 @@ export default function FeedPage() {
                 disabled={page >= pagination.totalPages}
                 className="px-4 py-2 rounded-lg text-sm font-medium border border-gray-200 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
               >
-                下一页
+                {t('feed.nextPage')}
               </button>
             </div>
           )}

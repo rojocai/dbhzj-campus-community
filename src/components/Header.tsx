@@ -12,26 +12,29 @@ import {
   ShieldCheckIcon,
   CalendarDaysIcon,
 } from "@heroicons/react/24/outline";
+import { useLang } from "@/lib/lang/LangContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
-
-const navLinks = [
-  { href: "/", label: "首页" },
-  { href: "/feed", label: "广场" },
-  { href: "/checkin", label: "签到" },
-  { href: "/create", label: "发帖" },
-  { href: "/about", label: "关于我们" },
-];
 
 export default function Header() {
   const { data: session } = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: siteConfig } = useSWR("/api/site-config", fetcher);
+  const { t } = useLang();
 
   const user = session?.user as any;
-  const siteTitle = siteConfig?.toolbarTitle || siteConfig?.siteTitle || '东白湖之家';
+  const siteTitle = siteConfig?.toolbarTitle || siteConfig?.siteTitle || t('site.title');
   const toolbarLogo = siteConfig?.toolbarLogo || '';
   const logoInitial = toolbarLogo ? '' : (siteTitle.charAt(0));
+
+  const navLinks = [
+    { href: "/", label: t('nav.home') },
+    { href: "/feed", label: t('nav.feed') },
+    { href: "/checkin", label: t('nav.checkin') },
+    { href: "/create", label: t('nav.create') },
+    { href: "/about", label: t('nav.about') },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -71,6 +74,7 @@ export default function Header() {
 
           {/* Auth Area */}
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             {user ? (
               <div className="hidden md:flex items-center gap-3">
                 {user.role === "ADMIN" && (
@@ -79,7 +83,7 @@ export default function Header() {
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors"
                   >
                     <ShieldCheckIcon className="w-4 h-4" />
-                    管理
+                    {t('nav.admin')}
                   </Link>
                 )}
                 <Link
@@ -106,7 +110,7 @@ export default function Header() {
                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors"
                 >
                   <ArrowRightOnRectangleIcon className="w-4 h-4" />
-                  退出
+                  {t('nav.signout')}
                 </button>
               </div>
             ) : (
@@ -115,13 +119,13 @@ export default function Header() {
                   href="/signin"
                   className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                 >
-                  登录
+                  {t('nav.signin')}
                 </Link>
                 <Link
                   href="/signup"
                   className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors"
                 >
-                  注册
+                  {t('nav.signup')}
                 </Link>
               </div>
             )}
@@ -130,7 +134,7 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-              aria-label="菜单"
+              aria-label={t('nav.menuLabel')}
             >
               {mobileMenuOpen ? (
                 <XMarkIcon className="w-6 h-6" />
@@ -165,7 +169,7 @@ export default function Header() {
                   className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
                 >
                   <CalendarDaysIcon className="w-5 h-5" />
-                  每日签到
+                  {t('nav.dailyCheckin')}
                 </Link>
                 <Link
                   href="/profile"
@@ -173,7 +177,7 @@ export default function Header() {
                   className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50"
                 >
                   <UserCircleIcon className="w-5 h-5" />
-                  个人中心
+                  {t('nav.profile')}
                 </Link>
                 {user.role === "ADMIN" && (
                   <Link
@@ -182,7 +186,7 @@ export default function Header() {
                     className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-amber-600 hover:bg-amber-50"
                   >
                     <ShieldCheckIcon className="w-5 h-5" />
-                    管理后台
+                    {t('nav.adminFull')}
                   </Link>
                 )}
                 <button
@@ -193,7 +197,7 @@ export default function Header() {
                   className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-50 w-full"
                 >
                   <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                  退出登录
+                  {t('nav.signoutFull')}
                 </button>
               </>
             ) : (
@@ -203,14 +207,14 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-indigo-300 hover:text-indigo-600"
                 >
-                  登录
+                  {t('nav.signin')}
                 </Link>
                 <Link
                   href="/signup"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex-1 text-center px-4 py-2.5 rounded-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
                 >
-                  注册
+                  {t('nav.signup')}
                 </Link>
               </div>
             )}

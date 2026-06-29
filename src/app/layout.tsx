@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import SessionProvider from "@/components/SessionProvider";
+import { LangProvider } from "@/lib/lang/LangContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { cookies } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,17 +34,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+  const lang = cookieStore.get('lang')?.value === 'en' ? 'en' : 'zh';
 
   return (
     <html
-      lang="zh-CN"
+      lang={lang === 'en' ? 'en' : 'zh-CN'}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#f8fafc] text-[#0f172a]">
         <SessionProvider session={session}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <LangProvider initialLang={lang as 'zh' | 'en'}>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </LangProvider>
         </SessionProvider>
       </body>
     </html>

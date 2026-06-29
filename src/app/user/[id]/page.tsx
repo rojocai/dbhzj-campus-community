@@ -12,12 +12,14 @@ import {
   FireIcon,
 } from "@heroicons/react/24/outline";
 import BadgeDisplay from "@/components/BadgeDisplay";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function UserDetailPage() {
   const params = useParams();
   const id = params.id as string;
+  const { t, lang } = useLang();
 
   const { data: user, error, isLoading } = useSWR(`/api/users/${id}`, fetcher);
   const { data: badges } = useSWR(`/api/users/${id}/badges`, fetcher);
@@ -41,14 +43,14 @@ export default function UserDetailPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">用户不存在</h2>
-        <p className="text-gray-500 mb-6">该用户可能已注销或链接无效</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('user.notFound')}</h2>
+        <p className="text-gray-500 mb-6">{t('user.notFoundDesc')}</p>
         <Link
           href="/feed"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
         >
           <ArrowLeftIcon className="w-4 h-4" />
-          返回广场
+          {t('user.backToFeed')}
         </Link>
       </div>
     );
@@ -66,7 +68,7 @@ export default function UserDetailPage() {
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
       >
         <ArrowLeftIcon className="w-4 h-4" />
-        返回广场
+        {t('user.backToFeed')}
       </Link>
 
       {/* Profile Card */}
@@ -112,16 +114,17 @@ export default function UserDetailPage() {
             <div className="flex items-center gap-1.5 text-gray-500">
               <FireIcon className="w-4 h-4 text-orange-500" />
               <span className="font-medium text-gray-900">Lv.{user.level}</span>
-              <span className="text-gray-400">· {user.experience} 经验</span>
+              <span className="text-gray-400">· {user.experience} {t('user.experience')}</span>
             </div>
             <div className="flex items-center gap-1.5 text-gray-500">
               <CalendarDaysIcon className="w-4 h-4 text-indigo-500" />
               <span>
-                加入于{" "}
-                {new Date(user.createdAt).toLocaleDateString("zh-CN", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
+                {t('user.joinedAt', {
+                  date: new Date(user.createdAt).toLocaleDateString(lang === 'en' ? 'en-US' : "zh-CN", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
                 })}
               </span>
             </div>
@@ -129,23 +132,23 @@ export default function UserDetailPage() {
 
           <div className="flex items-center gap-6 mt-3 text-sm">
             <span className="text-gray-500">
-              <span className="font-semibold text-gray-900">{postCount}</span>{" "}
-              帖子
+              <span className="font-semibold text-gray-900">{postCount}</span>{' '}
+              {t('user.posts')}
             </span>
             <span className="text-gray-500">
               <span className="font-semibold text-gray-900">
                 {followerCount}
-              </span>{" "}
-              关注者
+              </span>{' '}
+              {t('user.followers')}
             </span>
             <span className="text-gray-500">
               <span className="font-semibold text-gray-900">
                 {followingCount}
-              </span>{" "}
-              关注
+              </span>{' '}
+              {t('user.following')}
             </span>
             <span className="text-gray-500">
-              💰 <span className="font-semibold text-gray-900">{user.coins}</span> 积分
+              💰 <span className="font-semibold text-gray-900">{user.coins}</span> {t('user.coins')}
             </span>
           </div>
         </div>
@@ -155,7 +158,7 @@ export default function UserDetailPage() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <ShieldCheckIcon className="w-5 h-5 text-indigo-500" />
-          获得的勋章
+          {t('user.badges')}
           {badges && badges.length > 0 && (
             <span className="text-sm font-normal text-gray-400">
               ({badges.length})
@@ -169,7 +172,7 @@ export default function UserDetailPage() {
       <div>
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <AcademicCapIcon className="w-5 h-5 text-indigo-500" />
-          最近的帖子
+          {t('user.recentPosts')}
         </h2>
 
         {user.posts && user.posts.length > 0 ? (
@@ -218,7 +221,7 @@ export default function UserDetailPage() {
           </div>
         ) : (
           <div className="text-center py-10 text-gray-400 bg-white rounded-xl border border-gray-100">
-            <p className="text-sm">暂无帖子</p>
+            <p className="text-sm">{t('user.noPosts')}</p>
           </div>
         )}
       </div>

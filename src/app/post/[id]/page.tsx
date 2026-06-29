@@ -20,6 +20,7 @@ import {
   HeartIcon as HeartSolid,
   BookmarkIcon as BookmarkSolid,
 } from "@heroicons/react/24/solid";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -28,6 +29,7 @@ export default function PostDetailPage() {
   const id = params.id as string;
   const { data: session } = useSession();
   const user = session?.user as any;
+  const { t, lang } = useLang();
 
   const {
     data: post,
@@ -98,7 +100,7 @@ export default function PostDetailPage() {
       await navigator.share({ title: post?.title, url });
     } else {
       await navigator.clipboard.writeText(url);
-      alert("链接已复制到剪贴板！");
+      alert(t('post.linkCopied'));
     }
   };
 
@@ -154,16 +156,16 @@ export default function PostDetailPage() {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">帖子不存在</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('post.notFound')}</h2>
         <p className="text-gray-500 mb-6">
-          该帖子可能已被删除或链接无效
+          {t('post.notFoundDesc')}
         </p>
         <Link
           href="/feed"
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
         >
           <ArrowLeftIcon className="w-4 h-4" />
-          返回广场
+          {t('post.backToFeed')}
         </Link>
       </div>
     );
@@ -199,7 +201,7 @@ export default function PostDetailPage() {
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-indigo-600 mb-6 transition-colors"
       >
         <ArrowLeftIcon className="w-4 h-4" />
-        返回广场
+        {t('post.backToFeed')}
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -221,24 +223,24 @@ export default function PostDetailPage() {
               )}
               {post.isEssence && (
                 <span className="text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">
-                  ⭐ 精华
+                  {t('post.essence')}
                 </span>
               )}
               {post.isPinned && (
                 <span className="text-xs px-2.5 py-1 rounded-full bg-red-100 text-red-700 font-medium">
-                  📌 置顶
+                  {t('post.pinned')}
                 </span>
               )}
               {post.isPrivate && (
                 <span className="text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-medium flex items-center gap-1">
                   <EyeSlashIcon className="w-3 h-3" />
-                  私密
+                  {t('post.private')}
                 </span>
               )}
               {post.commentsLocked && (
                 <span className="text-xs px-2.5 py-1 rounded-full bg-orange-100 text-orange-700 font-medium flex items-center gap-1">
                   <LockClosedIcon className="w-3 h-3" />
-                  评论已关闭
+                  {t('post.commentsLocked')}
                 </span>
               )}
             </div>
@@ -254,7 +256,7 @@ export default function PostDetailPage() {
                   className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
                 >
                   <PencilSquareIcon className="w-4 h-4" />
-                  编辑
+                  {t('post.edit')}
                 </Link>
               )}
             </div>
@@ -285,14 +287,14 @@ export default function PostDetailPage() {
                 </Link>
                 <span className="inline-flex items-center gap-1 ml-1.5">
                   {post.author?.id === post.authorId && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium border border-indigo-100">楼主</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium border border-indigo-100">{t('post.authorBadge')}</span>
                   )}
                   {(post.author?.role === "MODERATOR" || post.author?.role === "ADMIN") && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 font-medium border border-amber-100">版主</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 font-medium border border-amber-100">{t('post.moderatorBadge')}</span>
                   )}
                 </span>
                 <p className="text-xs text-gray-400">
-                  {new Date(post.createdAt).toLocaleString("zh-CN")} · 发布于
+                  {new Date(post.createdAt).toLocaleString(lang === 'en' ? 'en-US' : "zh-CN")} · {t('post.posted')}
                   {post.author?.grade && ` ${post.author.grade}`}
                 </p>
               </div>
@@ -310,7 +312,7 @@ export default function PostDetailPage() {
                   <img
                     key={i}
                     src={img}
-                    alt={`图片 ${i + 1}`}
+                    alt={t('post.imageAlt', { index: i + 1 })}
                     className="rounded-lg w-full object-cover max-h-96"
                   />
                 ))}
@@ -329,7 +331,7 @@ export default function PostDetailPage() {
                       className="w-full max-h-[500px]"
                       playsInline
                     >
-                      您的浏览器不支持视频播放
+                      {t('post.videoUnsupported')}
                     </video>
                   </div>
                 ))}
@@ -376,8 +378,8 @@ export default function PostDetailPage() {
                     </button>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gray-700">🎵 背景音乐</span>
-                        <span className="text-xs text-gray-400 truncate">{bgMusicData.name || "音乐"}</span>
+                        <span className="text-sm font-medium text-gray-700">{t('post.bgMusicLabel')}</span>
+                        <span className="text-xs text-gray-400 truncate">{bgMusicData.name || t('post.bgMusicName')}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">
                         <div className="flex gap-0.5">
@@ -395,13 +397,13 @@ export default function PostDetailPage() {
                           ))}
                         </div>
                         <span className="text-xs text-gray-400">
-                          {musicPlaying ? "播放中" : "点击播放"}
+                          {musicPlaying ? t('post.bgMusicPlaying') : t('post.bgMusicClickPlay')}
                         </span>
                       </div>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-1 rounded bg-white/60 text-gray-400 border border-indigo-100">
-                    仅你可见
+                    {t('post.bgMusicOnlyYou')}
                   </span>
                 </div>
                 <audio
@@ -446,14 +448,14 @@ export default function PostDetailPage() {
                 ) : (
                   <BookmarkOutline className="w-5 h-5" />
                 )}
-                收藏
+                {t('post.collect')}
               </button>
               <button
                 onClick={handleShare}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-indigo-500 transition-all"
               >
                 <ShareIcon className="w-5 h-5" />
-                分享
+                {t('post.share')}
               </button>
               <div className="ml-auto flex items-center gap-3 text-xs text-gray-400">
                 <span>👁️ {post.views}</span>
@@ -466,35 +468,35 @@ export default function PostDetailPage() {
           <div className="mt-8">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
               <ChatBubbleLeftIcon className="w-5 h-5" />
-              评论 ({post.commentsCount})
+              {t('post.comments', { count: post.commentsCount })}
             </h2>
 
             {/* Comment Form */}
             {post.commentsLocked ? (
               <div className="text-center py-8 bg-gray-50 rounded-xl mb-8">
                 <LockClosedIcon className="w-6 h-6 mx-auto text-gray-400 mb-2" />
-                <p className="text-gray-500">该帖子已关闭评论</p>
+                <p className="text-gray-500">{t('post.commentsClosed')}</p>
               </div>
             ) : session ? (
               <form onSubmit={handleComment} className="mb-8">
                 {replyTo && (
                   <div className="flex items-center gap-2 text-sm text-indigo-600 mb-2 bg-indigo-50 px-4 py-2 rounded-lg">
                     <span>
-                      回复 @{replyTo.nickname}
+                      {t('post.replyTo', { nickname: replyTo.nickname })}
                     </span>
                     <button
                       type="button"
                       onClick={() => setReplyTo(null)}
                       className="ml-auto text-gray-400 hover:text-gray-600"
                     >
-                      取消
+                      {t('post.cancel')}
                     </button>
                   </div>
                 )}
                 <textarea
                   value={commentContent}
                   onChange={(e) => setCommentContent(e.target.value)}
-                  placeholder="写下你的评论..."
+                  placeholder={t('post.commentPlaceholder')}
                   rows={3}
                   className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm resize-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
                 />
@@ -504,18 +506,18 @@ export default function PostDetailPage() {
                     disabled={!commentContent.trim() || submitting}
                     className="px-5 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                   >
-                    {submitting ? "发送中..." : "发表评论"}
+                    {submitting ? t('post.commentSubmitting') : t('post.commentSubmit')}
                   </button>
                 </div>
               </form>
             ) : (
               <div className="text-center py-8 bg-gray-50 rounded-xl mb-8">
-                <p className="text-gray-500 mb-3">登录后即可发表评论</p>
+                <p className="text-gray-500 mb-3">{t('post.commentsLoginRequired')}</p>
                 <Link
                   href="/signin"
                   className="inline-block px-6 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700"
                 >
-                  立即登录
+                  {t('post.signinNow')}
                 </Link>
               </div>
             )}
@@ -523,7 +525,7 @@ export default function PostDetailPage() {
             {/* Comments List */}
             {topLevelComments.length === 0 && (
               <div className="text-center py-10 text-gray-400">
-                暂无评论，快来抢沙发吧！
+                {t('post.noComments')}
               </div>
             )}
 
@@ -555,7 +557,7 @@ export default function PostDetailPage() {
                       {comment.author?.nickname || comment.author?.username}
                     </Link>
                     <span className="text-xs text-gray-400">
-                      {new Date(comment.createdAt).toLocaleString("zh-CN")}
+                      {new Date(comment.createdAt).toLocaleString(lang === 'en' ? 'en-US' : "zh-CN")}
                     </span>
                   </div>
 
@@ -577,7 +579,7 @@ export default function PostDetailPage() {
                       }
                       className="text-xs text-gray-400 hover:text-indigo-600 transition-colors"
                     >
-                      回复
+                      {t('post.reply')}
                     </button>
                   </div>
 
@@ -605,14 +607,14 @@ export default function PostDetailPage() {
                             </span>
                             {reply.replyTo && (
                               <span className="text-xs text-gray-400">
-                                回复 @
+                                {t('post.reply')} @
                                 {reply.replyTo.author?.nickname ||
                                   reply.replyTo.author?.username}
                               </span>
                             )}
                             <span className="text-xs text-gray-400">
                               {new Date(reply.createdAt).toLocaleString(
-                                "zh-CN"
+                                lang === 'en' ? 'en-US' : "zh-CN"
                               )}
                             </span>
                           </div>
@@ -653,10 +655,10 @@ export default function PostDetailPage() {
                 </h3>
                 <div className="flex items-center justify-center gap-1 mt-1">
                   {post.author?.id === post.authorId && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium border border-indigo-100">楼主</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-600 font-medium border border-indigo-100">{t('post.authorBadge')}</span>
                   )}
                   {(post.author?.role === "MODERATOR" || post.author?.role === "ADMIN") && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 font-medium border border-amber-100">版主</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-600 font-medium border border-amber-100">{t('post.moderatorBadge')}</span>
                   )}
                 </div>
               </Link>
@@ -667,26 +669,26 @@ export default function PostDetailPage() {
               )}
               <div className="flex items-center justify-center gap-4 mt-3 text-xs text-gray-400">
                 <span>Lv.{post.author?.level}</span>
-                <span>经验 {post.author?.experience}</span>
+                <span>{t('post.sidebar.experience')} {post.author?.experience}</span>
               </div>
             </div>
 
             {/* Stats Card */}
             <div className="bg-white rounded-xl border border-gray-100 p-5">
               <h4 className="text-sm font-semibold text-gray-900 mb-3">
-                帖子数据
+                {t('post.sidebar.postData')}
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">浏览</span>
+                  <span className="text-gray-500">{t('post.sidebar.views')}</span>
                   <span className="font-medium">{post.views}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">点赞</span>
+                  <span className="text-gray-500">{t('post.sidebar.likes')}</span>
                   <span className="font-medium">{post.likesCount}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">评论</span>
+                  <span className="text-gray-500">{t('post.sidebar.comments')}</span>
                   <span className="font-medium">{post.commentsCount}</span>
                 </div>
               </div>

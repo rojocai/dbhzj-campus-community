@@ -10,6 +10,7 @@ import {
   UserCircleIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -17,6 +18,7 @@ export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const user = session?.user as any;
+  const { t } = useLang();
 
   const {
     data: profile,
@@ -71,13 +73,13 @@ export default function ProfilePage() {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-4">🔒</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">请先登录</h2>
-        <p className="text-gray-500 mb-6">登录后查看个人中心</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('profile.loginRequired')}</h2>
+        <p className="text-gray-500 mb-6">{t('profile.loginRequiredDesc')}</p>
         <Link
           href="/signin"
           className="inline-block px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
         >
-          立即登录
+          {t('profile.signinNow')}
         </Link>
       </div>
     );
@@ -86,12 +88,12 @@ export default function ProfilePage() {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <p className="text-gray-500">加载失败，请刷新重试</p>
+        <p className="text-gray-500">{t('profile.loadFailed')}</p>
         <button
           onClick={() => mutate()}
           className="mt-4 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm"
         >
-          重新加载
+          {t('profile.reload')}
         </button>
       </div>
     );
@@ -118,15 +120,13 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 限制 2MB
     if (file.size > 2 * 1024 * 1024) {
-      setMessage("❌ 头像不能超过 2MB");
+      setMessage(t('profile.errors.avatarTooLarge'));
       return;
     }
 
-    // 限制格式
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      setMessage("❌ 仅支持 JPG、PNG、WebP 格式");
+      setMessage(t('profile.errors.avatarFormat'));
       return;
     }
 
@@ -154,16 +154,16 @@ export default function ProfilePage() {
         body: fd,
       });
       if (res.ok) {
-        setMessage("✅ 保存成功");
+        setMessage(t('profile.saved'));
         setAvatarFile(null);
         mutate();
         setTimeout(() => setMessage(""), 2500);
       } else {
         const err = await res.json();
-        setMessage(`❌ ${err.error || "保存失败"}`);
+        setMessage(`❌ ${err.error || t('profile.saveFailed')}`);
       }
     } catch {
-      setMessage("❌ 网络错误");
+      setMessage(t('profile.networkError'));
     }
     setSaving(false);
   };
@@ -196,7 +196,7 @@ export default function ProfilePage() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-md hover:bg-indigo-700 transition-all"
-                  title="上传头像"
+                  title={t('profile.uploadAvatar')}
                 >
                   <ArrowUpTrayIcon className="w-4 h-4" />
                 </button>
@@ -232,7 +232,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    昵称
+                    {t('profile.form.nickname')}
                   </label>
                   <input
                     type="text"
@@ -243,7 +243,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    用户名（不可修改）
+                    {t('profile.form.usernameFixed')}
                   </label>
                   <input
                     type="text"
@@ -254,46 +254,46 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    年级
+                    {t('profile.form.grade')}
                   </label>
                   <input
                     type="text"
                     value={form.grade}
                     onChange={update("grade")}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-                    placeholder="如：高一、高二"
+                    placeholder={t('profile.form.gradePlaceholder')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    班级
+                    {t('profile.form.class')}
                   </label>
                   <input
                     type="text"
                     value={form.class_}
                     onChange={update("class_")}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-                    placeholder="如：1班、2班"
+                    placeholder={t('profile.form.classPlaceholder')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm text-gray-500 mb-1">
-                    性别
+                    {t('profile.form.gender')}
                   </label>
                   <select
                     value={form.gender}
                     onChange={update("gender")}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 bg-white"
                   >
-                    <option value="保密">保密</option>
-                    <option value="男">男</option>
-                    <option value="女">女</option>
+                    <option value="保密">{t('profile.form.genderSecret')}</option>
+                    <option value="男">{t('profile.form.genderMale')}</option>
+                    <option value="女">{t('profile.form.genderFemale')}</option>
                   </select>
                 </div>
               </div>
               <div>
                 <label className="block text-sm text-gray-500 mb-1">
-                  个人简介
+                  {t('profile.form.bio')}
                 </label>
                 <textarea
                   value={form.bio}
@@ -317,7 +317,7 @@ export default function ProfilePage() {
                   disabled={saving}
                   className="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-40"
                 >
-                  {saving ? "保存中..." : "保存"}
+                  {saving ? t('profile.saving') : t('profile.save')}
                 </button>
                 <button
                   onClick={() => {
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                   }}
                   className="px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50"
                 >
-                  取消
+                  {t('profile.cancel')}
                 </button>
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function ProfilePage() {
               className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-all"
             >
               <PencilSquareIcon className="w-4 h-4" />
-              编辑资料
+              {t('profile.editProfile')}
             </button>
           )}
         </div>

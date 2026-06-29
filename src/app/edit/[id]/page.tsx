@@ -7,6 +7,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import { ArrowLeftIcon, LockClosedIcon, ChatBubbleLeftEllipsisIcon, EyeSlashIcon, MusicalNoteIcon } from "@heroicons/react/24/outline";
 import UploadZone from "@/components/UploadZone";
+import { useLang } from "@/lib/lang/LangContext";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
@@ -16,6 +17,7 @@ export default function EditPostPage() {
   const params = useParams();
   const postId = params.id as string;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLang();
 
   const {
     data: post,
@@ -87,7 +89,7 @@ export default function EditPostPage() {
         for (const file of Array.from(files)) {
           if (!file.type.startsWith("image/")) continue;
           if (file.size > 5 * 1024 * 1024) {
-            setError("图片大小不能超过5MB");
+            setError(t('errors.imageSize'));
             continue;
           }
           const formData = new FormData();
@@ -101,15 +103,15 @@ export default function EditPostPage() {
             setImages((prev) => [...prev, data.url]);
           } else {
             const err = await res.json();
-            setError(err.error || "上传失败");
+            setError(err.error || t('errors.uploadFailed'));
           }
         }
       } catch (err) {
-        setError("上传图片失败");
+        setError(t('errors.imageUploadFailed'));
       }
       setUploading(false);
     },
-    []
+    [t]
   );
 
   const handleVideoUpload = useCallback(async (files: FileList | File[]) => {
@@ -119,7 +121,7 @@ export default function EditPostPage() {
       for (const file of Array.from(files)) {
         if (!file.type.startsWith("video/")) continue;
         if (file.size > 200 * 1024 * 1024) {
-          setError("视频大小不能超过200MB");
+          setError(t('errors.videoSize'));
           continue;
         }
         const formData = new FormData();
@@ -130,14 +132,14 @@ export default function EditPostPage() {
           setVideos((prev) => [...prev, data.url]);
         } else {
           const err = await res.json();
-          setError(err.error || "上传视频失败");
+          setError(err.error || t('errors.videoUploadFailed'));
         }
       }
     } catch {
-      setError("上传视频失败");
+      setError(t('errors.videoUploadFailed'));
     }
     setVideoUploading(false);
-  }, []);
+  }, [t]);
 
   const removeVideo = (index: number) => {
     setVideos((prev) => prev.filter((_, i) => i !== index));
@@ -161,11 +163,11 @@ export default function EditPostPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
-      setError("请填写标题和内容");
+      setError(t('errors.titleContentRequired'));
       return;
     }
     if (title.length > 100) {
-      setError("标题不能超过100个字符");
+      setError(t('errors.titleTooLong'));
       return;
     }
 
@@ -197,10 +199,10 @@ export default function EditPostPage() {
         router.push(`/post/${postId}`);
       } else {
         const err = await res.json();
-        setError(err.error || "保存失败");
+        setError(err.error || t('errors.saveFailed'));
       }
     } catch (err) {
-      setError("保存失败，请稍后再试");
+      setError(t('errors.saveRetry'));
     }
     setSubmitting(false);
   };
@@ -209,13 +211,13 @@ export default function EditPostPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-4">🔒</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">请先登录</h2>
-        <p className="text-gray-500 mb-6">登录后才能编辑帖子</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('create.loginRequired')}</h2>
+        <p className="text-gray-500 mb-6">{t('create.loginRequiredDesc')}</p>
         <Link
           href="/signin"
           className="inline-block px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
         >
-          立即登录
+          {t('create.signinNow')}
         </Link>
       </div>
     );
@@ -237,12 +239,12 @@ export default function EditPostPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">帖子不存在</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('post.notFound')}</h2>
         <Link
           href="/feed"
           className="inline-block px-6 py-2.5 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"
         >
-          返回广场
+          {t('post.backToFeed')}
         </Link>
       </div>
     );
@@ -256,7 +258,7 @@ export default function EditPostPage() {
           className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-indigo-600 mb-4 transition-colors"
         >
           <ArrowLeftIcon className="w-4 h-4" />
-          返回帖子
+          {t('post.backToFeed')}
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">编辑帖子</h1>
         <p className="text-gray-500">修改你的帖子内容或设置</p>
@@ -266,13 +268,13 @@ export default function EditPostPage() {
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            标题 <span className="text-red-500">*</span>
+            {t('create.form.titleRequired')}
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="输入帖子标题..."
+            placeholder={t('create.form.titlePlaceholder')}
             maxLength={100}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
           />
@@ -284,14 +286,14 @@ export default function EditPostPage() {
         {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            分类
+            {t('create.form.category')}
           </label>
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all bg-white"
           >
-            <option value="">选择分类（可选）</option>
+            <option value="">{t('create.form.categoryPlaceholder')}</option>
             {categories?.map((cat: any) => (
               <option key={cat.id} value={cat.id}>
                 {cat.icon} {cat.name}
@@ -303,12 +305,12 @@ export default function EditPostPage() {
         {/* Content */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            内容 <span className="text-red-500">*</span>
+            {t('create.form.contentRequired')}
           </label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="写下你想分享的内容..."
+            placeholder={t('create.form.contentPlaceholder')}
             rows={12}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm resize-y min-h-[200px] focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
           />
@@ -317,13 +319,13 @@ export default function EditPostPage() {
         {/* Tags */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            标签
+            {t('create.form.tags')}
           </label>
           <input
             type="text"
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
-            placeholder="输入标签，用逗号或空格分隔（如：学习, 考试, 经验分享）"
+            placeholder={t('create.form.tagsPlaceholder')}
             className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
           />
         </div>
@@ -332,8 +334,8 @@ export default function EditPostPage() {
         <UploadZone
           accept="image/*"
           maxSizeMB={10}
-          label="🖼️ 图片上传"
-          hint="支持 JPG、PNG、GIF、WebP，单张不超过 10MB，支持多选"
+          label={t('create.form.imageUpload')}
+          hint={t('create.form.imageHint')}
           fileList={images}
           onAdd={(urls) => setImages(prev => [...prev, ...urls])}
           onRemove={(i) => setImages(prev => prev.filter((_, j) => j !== i))}
@@ -343,8 +345,8 @@ export default function EditPostPage() {
         <UploadZone
           accept="video/*"
           maxSizeMB={200}
-          label="🎬 视频上传"
-          hint="支持 MP4、WebM、MOV，单文件不超过 200MB，支持多选"
+          label={t('create.form.videoUpload')}
+          hint={t('create.form.videoHint')}
           fileList={videos}
           onAdd={(urls) => setVideos(prev => [...prev, ...urls])}
           onRemove={(i) => setVideos(prev => prev.filter((_, j) => j !== i))}
@@ -354,44 +356,44 @@ export default function EditPostPage() {
         <div className="border border-gray-200 rounded-xl p-5">
           <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-4">
             <MusicalNoteIcon className="w-4 h-4" />
-            背景音乐（可选）
+            {t('create.form.bgMusic')}
           </h3>
-          <p className="text-xs text-gray-400 mb-3">设置后，读者打开帖子将自动播放此音乐，每个读者可独立关闭</p>
+          <p className="text-xs text-gray-400 mb-3">{t('create.form.bgMusicDesc')}</p>
 
           {bgMusicUrl ? (
             <div className="flex items-center justify-between bg-indigo-50 rounded-lg p-3">
               <div className="flex items-center gap-2 min-w-0">
                 <span>🎵</span>
-                <span className="text-sm text-gray-700 truncate">{bgMusicName || "背景音乐"}</span>
+                <span className="text-sm text-gray-700 truncate">{bgMusicName || t('create.form.bgMusicName')}</span>
               </div>
-              <button type="button" onClick={() => { setBgMusicUrl(""); setBgMusicName(""); }} className="shrink-0 ml-2 text-xs text-red-500 hover:text-red-700">移除</button>
+              <button type="button" onClick={() => { setBgMusicUrl(""); setBgMusicName(""); }} className="shrink-0 ml-2 text-xs text-red-500 hover:text-red-700">{t('create.form.bgMusicRemove')}</button>
             </div>
           ) : (
             <div className="space-y-3">
               <div className="flex gap-2">
-                <button type="button" onClick={() => setBgMusicType("link")} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${bgMusicType === "link" ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>🔗 音乐链接</button>
-                <button type="button" onClick={() => setBgMusicType("upload")} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${bgMusicType === "upload" ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>📤 上传MP3</button>
+                <button type="button" onClick={() => setBgMusicType("link")} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${bgMusicType === "link" ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>{t('create.form.bgMusicLink')}</button>
+                <button type="button" onClick={() => setBgMusicType("upload")} className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${bgMusicType === "upload" ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}>{t('create.form.bgMusicUpload')}</button>
               </div>
               {bgMusicType === "link" ? (
-                <input type="text" value={bgMusicUrl} onChange={(e) => { setBgMusicUrl(e.target.value); setBgMusicName(e.target.value.split('/').pop() || '音乐链接'); }} placeholder="粘贴音乐文件直链 URL" className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all" />
+                <input type="text" value={bgMusicUrl} onChange={(e) => { setBgMusicUrl(e.target.value); setBgMusicName(e.target.value.split('/').pop() || t('create.form.bgMusicName')); }} placeholder={t('create.form.bgMusicLinkPlaceholder')} className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all" />
               ) : (
                 <label className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 border-dashed border-gray-200 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50 transition-all">
                   {bgMusicUploading ? (
-                    <span className="text-sm text-gray-500 flex items-center gap-2"><div className="animate-spin w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full"></div>上传中...</span>
+                    <span className="text-sm text-gray-500 flex items-center gap-2"><div className="animate-spin w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full"></div>{t('create.form.bgMusicUploading')}...</span>
                   ) : (
-                    <span className="text-sm text-gray-500">🎵 点击选择 MP3 文件（不超过 20MB）</span>
+                    <span className="text-sm text-gray-500">{t('create.form.bgMusicUploadLabel')}</span>
                   )}
                   <input type="file" accept="audio/*" onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-                    if (file.size > 20 * 1024 * 1024) { setError("音频不能超过20MB"); return; }
+                    if (file.size > 20 * 1024 * 1024) { setError(t('errors.audioSize')); return; }
                     setBgMusicUploading(true);
                     try {
                       const fd = new FormData(); fd.append("file", file);
                       const res = await fetch("/api/upload", { method: "POST", body: fd });
                       if (res.ok) { const d = await res.json(); setBgMusicUrl(d.url); setBgMusicName(file.name); setBgMusicType("upload"); }
-                      else { const e2 = await res.json(); setError(e2.error || "上传失败"); }
-                    } catch { setError("上传音频失败"); }
+                      else { const e2 = await res.json(); setError(e2.error || t('errors.uploadFailed')); }
+                    } catch { setError(t('errors.networkError')); }
                     setBgMusicUploading(false);
                   }} className="hidden" disabled={bgMusicUploading} />
                 </label>
@@ -400,11 +402,11 @@ export default function EditPostPage() {
           )}
         </div>
 
-        {/* Post Settings - only shown to author */}
+        {/* Post Settings */}
         <div className="border border-gray-200 rounded-xl p-5 space-y-4">
           <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
             <LockClosedIcon className="w-4 h-4" />
-            帖子设置
+            {t('create.form.postSettings')}
           </h3>
 
           <label className="flex items-center gap-3 cursor-pointer group">
@@ -420,10 +422,10 @@ export default function EditPostPage() {
             <div className="flex flex-col">
               <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors flex items-center gap-1.5">
                 <ChatBubbleLeftEllipsisIcon className="w-4 h-4" />
-                禁止评论
+                {t('create.form.disableComments')}
               </span>
               <span className="text-xs text-gray-400">
-                开启后，其他人无法对该帖子发表评论
+                {t('create.form.disableCommentsDesc')}
               </span>
             </div>
           </label>
@@ -441,10 +443,10 @@ export default function EditPostPage() {
             <div className="flex flex-col">
               <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors flex items-center gap-1.5">
                 <EyeSlashIcon className="w-4 h-4" />
-                设为私密
+                {t('create.form.setPrivate')}
               </span>
               <span className="text-xs text-gray-400">
-                开启后，只有你和超级管理员可以看到此帖子
+                {t('create.form.setPrivateDesc')}
               </span>
             </div>
           </label>
@@ -463,7 +465,7 @@ export default function EditPostPage() {
             href={`/post/${postId}`}
             className="px-6 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all"
           >
-            取消
+            {t('common.cancel')}
           </Link>
           <button
             type="submit"
@@ -473,10 +475,10 @@ export default function EditPostPage() {
             {submitting ? (
               <span className="flex items-center gap-2">
                 <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                保存中...
+                {t('common.save')}...
               </span>
             ) : (
-              "保存修改"
+              t('common.save')
             )}
           </button>
         </div>
