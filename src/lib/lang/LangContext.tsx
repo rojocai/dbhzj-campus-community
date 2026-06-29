@@ -62,16 +62,22 @@ export function LangProvider({ children, initialLang = 'zh' }: { children: React
   }, [])
 
   const t = useCallback(
-    (key: string, params?: Record<string, string | number>): string => {
+    (key: string, params?: Record<string, string | number>): string | string[] => {
       const messages = ALL_MESSAGES[lang] || ALL_MESSAGES['zh']
       const value = getNestedValue(messages, key)
-      if (value === undefined || typeof value === 'object') {
+      if (value === undefined) {
         const zhValue = getNestedValue(ALL_MESSAGES['zh'], key)
+        if (Array.isArray(zhValue)) return zhValue
         if (typeof zhValue === 'string') return interpolate(zhValue, params)
         console.warn(`[i18n] Missing translation key: ${key}`)
         return key
       }
+      if (Array.isArray(value)) return value
       if (typeof value === 'string') return interpolate(value, params)
+      if (typeof value === 'object') {
+        console.warn(`[i18n] Missing translation key: ${key}`)
+        return key
+      }
       return String(value)
     },
     [lang, version]
