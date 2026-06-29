@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # =============================================================================
 # 东白湖之家校园论坛社区 - 一键部署脚本
-# 版本: v1.0.0
+# 版本: v1.0.1
 # 仓库: https://github.com/rojocai/dbhzj-campus-community
-# 支持: Debian / Ubuntu / CentOS / RHEL / Fedora / AlmaLinux / Rocky Linux
+# 支持: Debian / Ubuntu / CentOS / RHEL / Fedora / AlmaLinux / Rocky Linux / Kali / Linux Mint
+# 包含: Node.js 安装 | Prisma+SQLite | NPM 反代 | Let's Encrypt SSL | Cloudflare DNS | 远程部署副站
 # =============================================================================
 set -euo pipefail
 
@@ -19,7 +20,7 @@ input() { echo -ne "${BLUE}[INPUT]${NC} $*"; }
 # ── 默认变量 ──
 PROJECT_NAME="dbhzj-campus-community"
 PROJECT_DIR="/opt/${PROJECT_NAME}"
-VERSION="v1.0.0"
+VERSION="v1.0.1"
 GITHUB_REPO="https://github.com/rojocai/${PROJECT_NAME}.git"
 GITHUB_BRANCH="main"
 SERVICE_NAME="campus-life"
@@ -94,7 +95,7 @@ install_deps() {
   case "${OS}" in
     debian|ubuntu|kali|linuxmint|elementary|pop|zorin)
       apt-get update -qq
-      apt-get install -y -qq curl git wget sqlite3 openssl sshpass
+      apt-get install -y -qq curl git wget sqlite3 openssl sshpass rsync
       ;;
     centos|rhel|almalinux|rocky)
       yum install -y curl git wget sqlite openssl sshpass
@@ -577,13 +578,28 @@ print_summary() {
   echo -e "${CYAN}════════════════════════════════════════════════════${NC}"
   echo ""
   echo -e "  📂 ${BLUE}项目路径:${NC}   ${PROJECT_DIR}"
-  echo -e "  🌐 ${BLUE}主站域名:${NC}   https://${MAIN_DOMAIN}"
+  echo -e "  🖥 ${BLUE}服务器 IP:${NC}   ${SERVER_IP}"
   if [ -n "${SUB_DOMAIN}" ]; then
     echo -e "  🌐 ${BLUE}副站域名:${NC}   https://${SUB_DOMAIN}"
+    if ${SUB_ON_REMOTE}; then
+      echo -e "  🖥 ${BLUE}副站 IP:${NC}     ${REMOTE_IP} (${REMOTE_SSH_USER}@${REMOTE_SSH_HOST}:${REMOTE_SSH_PORT})"
+    fi
   fi
-  echo -e "  🖥 ${BLUE}服务器 IP:${NC}   ${SERVER_IP}"
   echo -e "  🔌 ${BLUE}Node 端口:${NC}   ${NODE_PORT}"
   echo -e "  📡 ${BLUE}服务名称:${NC}    ${SERVICE_NAME}.service"
+  echo -e "  📁 ${BLUE}项目路径:${NC}    ${PROJECT_DIR}"
+  echo ""
+  echo -e "  ${YELLOW}━━━ NPM 反代配置表 ━━━${NC}"
+  echo -e "  ${BLUE}主站:${NC} https://${MAIN_DOMAIN} → http://Docker网关:${NODE_PORT}"
+  if [ -n "${SUB_DOMAIN}" ]; then
+    local sub_ip_display="${SERVER_IP}"
+    ${SUB_ON_REMOTE} && sub_ip_display="${REMOTE_IP}"
+    echo -e "  ${BLUE}副站:${NC} https://${SUB_DOMAIN} → http://${sub_ip_display}:${SUB_PORT:-5001}"
+  fi
+  if [ -n "${CF_EMAIL}" ]; then
+    echo -e "  📋 ${BLUE}DNS:${NC}         ✅ Cloudflare 自动配置"
+    echo -e "  🔒 ${BLUE}SSL:${NC}         ✅ Let's Encrypt (DNS-01 Cloudflare)"
+  fi
   echo ""
   echo -e "  ${YELLOW}━━━ 管理员登录 ━━━${NC}"
   echo -e "  📧 ${BLUE}邮箱:${NC}        admin@dongbaihu.com"
