@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="README.md">🏠 返回首页</a> &nbsp;·&nbsp; <a href="README.en.md">🇬🇧 English</a>
+  <a href="README.md">🏠 双语版 / Bilingual</a> &nbsp;·&nbsp; <a href="README.en.md">🇬🇧 English</a>
 </p>
 
 # 🏠 东白湖之家校园论坛社区
@@ -53,12 +53,10 @@
 
 ## 🌐 在线演示
 
-| 页面 | 链接 | 说明 |
-|------|------|------|
-| 🏠 **首页** | [https://780417.xyz](https://780417.xyz) | 社区首页，浏览帖子、签到、个人信息 |
-| 🔧 **管理后台** | [https://780417.xyz/admin](https://780417.xyz/admin) | 管理员面板 |
-| 📝 **广场** | [https://780417.xyz/feed](https://780417.xyz/feed) | 帖子列表 |
-| ✅ **签到** | [https://780417.xyz/checkin](https://780417.xyz/checkin) | 每日签到 |
+| 页面 | 链接 |
+|------|------|
+| 🏠 **首页** | [https://780417.xyz](https://780417.xyz) |
+| 🔧 **管理后台** | [https://780417.xyz/admin](https://780417.xyz/admin) |
 
 **管理员账号：** `admin@dongbaihu.com` / `admin123`
 

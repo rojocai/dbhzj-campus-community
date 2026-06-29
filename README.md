@@ -1,13 +1,7 @@
-<!--
-东白湖之家校园论坛社区 - README
-This file auto-detects language via browser. 
-For direct links: README.zh.md (Chinese) | README.en.md (English)
--->
-
 <p align="center">
-  <a href="README.zh.md"><img src="https://img.shields.io/badge/🇨🇳-中文版-red?style=for-the-badge" alt="中文版"/></a>
+  <img src="https://img.shields.io/badge/中文-🇨🇳-red?style=for-the-badge" alt="中文"/>
   &nbsp;&nbsp;
-  <a href="README.en.md"><img src="https://img.shields.io/badge/🇬🇧-English-blue?style=for-the-badge" alt="English"/></a>
+  <img src="https://img.shields.io/badge/English-🇬🇧-blue?style=for-the-badge" alt="English"/>
 </p>
 
 <p align="center">
@@ -19,95 +13,53 @@ For direct links: README.zh.md (Chinese) | README.en.md (English)
   <img src="https://img.shields.io/badge/多语言-🌐中/EN-ff69b4?style=flat-square"/>
 </p>
 
-<p align="center">
-  👆 <b>点击上方按钮切换语言</b> 👆
-</p>
-
-<br/>
-
-# 🏠 东白湖之家校园论坛社区
-
-> 一款功能完善的校园社区系统，基于 Next.js 16 + Prisma 5 + SQLite，适合学校、班级、社团搭建内部交流平台。  
-> A full-featured campus community system built with Next.js 16 + Prisma 5 + SQLite. Perfect for schools, classes, and clubs.
+> **东白湖之家校园论坛社区** — 一款功能完善的校园社区系统，基于 Next.js 16 + Prisma 5 + SQLite，适合学校、班级、社团搭建内部交流平台。
+>
+> **DongBaiHu Home Campus Forum** — A full-featured campus community system built with Next.js 16 + Prisma 5 + SQLite. Perfect for schools, classes, and clubs.
 
 ---
 
 ## ✨ 功能特性 / Features
 
-<table>
-<tr>
-<td width="50%">
-
-### 👤 用户系统
-- 注册、登录、退出（NextAuth v4）
-- 个人主页：头像、封面、签名、年级班级
-- 等级/经验值/硬币系统
-- 勋章成就系统（自动检测）
-- 每日签到（连续签到奖励）
-- 关注/粉丝功能
-
-### 📝 帖子系统
-- 发帖（文本、图片、视频、投票）
-- 分类管理（自定义图标颜色）
-- 点赞、收藏、评论（楼中楼）
-- 置顶、加精、锁定评论
-- 付费帖子（硬币购买）
-
-### 👑 管理员系统
-- 用户管理（搜索/禁言/改密）
-- 帖子管理（删除/置顶/加精）
-- 分类/公告管理
-- 站点配置（Hero 背景、烟花、联系方式等）
-
-</td>
-<td width="50%">
-
-### 👤 User System
-- Registration, login, logout (NextAuth v4)
-- Profile: avatar, cover, bio, grade, class
-- Level/Experience/Coin system
-- Achievement badges (auto-detect)
-- Daily check-in (streak rewards)
-- Follow/follower system
-
-### 📝 Posts
-- Create posts (text, gallery, video, poll)
-- Category management (custom icons/colors)
-- Like, favorite, comment (threaded replies)
-- Pin, essence, lock comments
-- Paid posts (coin purchase)
-
-### 👑 Admin Panel
-- User management (search/ban/password)
-- Post management (delete/pin/essence)
-- Category/Announcement management
-- Site config (Hero, Fireworks, Contact, etc.)
-
-</td>
-</tr>
-</table>
+| 中文 | English |
+|------|---------|
+| **👤 用户系统** | **👤 User System** |
+| 注册、登录、退出（NextAuth v4） | Registration, login, logout (NextAuth v4) |
+| 个人主页：头像、封面、签名、年级班级 | Profile page: avatar, cover, bio, grade, class |
+| 等级/经验值/硬币系统 | Level/Experience/Coin system |
+| 勋章成就系统（自动检测） | Achievement badges (auto-detect) |
+| 每日签到（连续签到奖励） | Daily check-in (streak rewards) |
+| 关注/粉丝功能 | Follow/follower system |
+| **📝 帖子系统** | **📝 Posts** |
+| 发帖（文本、图片、视频、投票） | Create posts (text, gallery, video, poll) |
+| 分类管理（自定义图标颜色） | Category management (custom icons/colors) |
+| 点赞、收藏、评论（楼中楼） | Like, favorite, comment (threaded replies) |
+| 置顶、加精、锁定评论 | Pin, essence, lock comments |
+| **👑 管理员系统** | **👑 Admin Panel** |
+| 用户管理（搜索/禁言/改密） | User management (search/ban/password) |
+| 帖子管理（删除/置顶/加精） | Post management (delete/pin/essence) |
+| 分类/公告管理 | Category/Announcement management |
+| 站点配置（Hero 背景、烟花、文字样式等） | Site config (Hero, Fireworks, Text Styles, etc.) |
 
 ### 🔧 技术栈 / Tech Stack
 
-| 类别 | 技术 |
-|------|------|
-| **框架** | Next.js 16 (App Router) |
-| **数据库** | Prisma 5 + SQLite（零配置） |
-| **认证** | NextAuth v4 (JWT) |
-| **前端** | React 19 + Tailwind CSS 4 + Heroicons |
-| **数据** | SWR |
-| **多语言** | 内置中/英文，一键切换 |
+| 类别 | 技术 | Category | Tech |
+|------|------|----------|------|
+| **框架** | Next.js 16 (App Router) | **Framework** | Next.js 16 (App Router) |
+| **数据库** | Prisma 5 + SQLite（零配置） | **Database** | Prisma 5 + SQLite (zero config) |
+| **认证** | NextAuth v4 (JWT) | **Auth** | NextAuth v4 (JWT) |
+| **前端** | React 19 + Tailwind CSS 4 + Heroicons | **Frontend** | React 19 + Tailwind CSS 4 + Heroicons |
+| **数据** | SWR + 增量静态再生成 | **Data** | SWR + ISR |
+| **多语言** | 内置中/英文，一键切换 | **i18n** | Built-in Chinese/English, toggle anytime |
 
 ---
 
 ## 🌐 在线演示 / Live Demo
 
-| 页面 / Page | 链接 / Link | 说明 |
-|-------------|-------------|------|
-| 🏠 首页 / Home | [https://780417.xyz](https://780417.xyz) | 社区首页、签到、信息流 |
-| 🔧 管理 / Admin | [https://780417.xyz/admin](https://780417.xyz/admin) | 管理后台 |
-| 📝 广场 / Feed | [https://780417.xyz/feed](https://780417.xyz/feed) | 帖子列表 |
-| ✅ 签到 / Check-in | [https://780417.xyz/checkin](https://780417.xyz/checkin) | 每日签到 |
+| 页面 / Page | 链接 / Link |
+|-------------|------------|
+| 🏠 **首页 / Home** | [https://780417.xyz](https://780417.xyz) |
+| 🔧 **管理后台 / Admin** | [https://780417.xyz/admin](https://780417.xyz/admin) |
 
 **管理员账号 / Admin Account：** `admin@dongbaihu.com` / `admin123`
 
@@ -148,30 +100,23 @@ npm start
 
 支持 Debian / Ubuntu / CentOS / Fedora / RHEL / AlmaLinux / Rocky / Kali / Linux Mint。
 
-### 自动安装 / Auto Install
+Supports Debian / Ubuntu / CentOS / Fedora / RHEL / AlmaLinux / Rocky / Kali / Linux Mint.
 
 ```bash
+# 一键运行 / Auto install（推荐 / recommended）
 bash <(curl -fsSL https://raw.githubusercontent.com/rojocai/dbhzj-campus-community/main/install-campus.sh)
 ```
 
-### 手动下载 / Manual Download
+### 部署功能 / Deploy Features
 
-```bash
-wget https://raw.githubusercontent.com/rojocai/dbhzj-campus-community/main/install-campus.sh
-chmod +x install-campus.sh
-sudo bash install-campus.sh
-```
-
-### 部署功能 / Features
-
-| 功能 | 说明 |
-|------|------|
-| 🌐 主站部署 | 克隆源码 → npm install → build → systemd 服务 |
-| 🌐 副站部署 | 同机/远程服务器部署第二个站点 |
-| ☁️ DNS 配置 | Cloudflare API → 自动创建 A 记录 |
-| 🔒 SSL 证书 | NPM + Let's Encrypt (DNS-01) |
-| 🐳 Docker/NPM | Nginx Proxy Manager 自动反代 |
-| 🔗 远程部署 | SSH 连接远程服务器部署副站 |
+| 中文 | English |
+|------|---------|
+| 🌐 主站部署：克隆 → 安装 → 构建 → systemd | 🌐 Main site: clone → install → build → systemd |
+| 🌐 副站部署：同机/远程服务器 | 🌐 Sub site: same/remote server |
+| ☁️ Cloudflare DNS：API 自动创建 A 记录 | ☁️ Cloudflare: auto A record via API |
+| 🔒 SSL 证书：NPM + Let's Encrypt (DNS-01) | 🔒 SSL cert: NPM + Let's Encrypt (DNS-01) |
+| 🐳 Docker/NPM：自动反代 | 🐳 Nginx Proxy Manager auto reverse proxy |
+| 🔗 远程部署：SSH 连接（密码/密钥） | 🔗 Remote SSH deploy (password/key) |
 
 ### 🆙 升级 / Update
 
@@ -185,7 +130,7 @@ bash /opt/dbhzj-campus-community/update.sh
 
 ```
 ├── src/
-│   ├── app/               # 页面 Pages
+│   ├── app/               # 页面 / Pages
 │   │   ├── page.tsx       # 首页 Home
 │   │   ├── feed/          # 广场 Feed
 │   │   ├── create/        # 发帖 Create Post
@@ -197,9 +142,9 @@ bash /opt/dbhzj-campus-community/update.sh
 │   │   ├── signin/        # 登录 Sign In
 │   │   ├── signup/        # 注册 Sign Up
 │   │   └── user/[id]/     # 用户主页 User Page
-│   ├── components/        # 通用组件 Components
-│   └── lib/               # 工具库 Libraries
-│       └── lang/          # 多语言 i18n (zh/en)
+│   ├── components/        # 通用组件 / Components
+│   └── lib/               # 工具库 / Libraries
+│       └── lang/          # 多语言 i18n (中/EN)
 ├── prisma/
 │   ├── schema.prisma      # 数据库模型
 │   └── seed.ts            # 种子数据
@@ -216,9 +161,9 @@ MIT License
 ---
 
 <p align="center">
-  <a href="README.zh.md">🇨🇳 中文版</a>
+  <a href="README.zh.md">🇨🇳 纯中文版</a>
   &nbsp;·&nbsp;
-  <a href="README.en.md">🇬🇧 English</a>
+  <a href="README.en.md">🇬🇧 English Only</a>
   &nbsp;·&nbsp;
   <a href="https://780417.xyz">🌐 在线演示 Live Demo</a>
   &nbsp;·&nbsp;

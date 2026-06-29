@@ -1,5 +1,5 @@
 <p align="right">
-  <a href="README.md">🏠 Home</a> &nbsp;·&nbsp; <a href="README.zh.md">🇨🇳 中文版</a>
+  <a href="README.md">🏠 Bilingual / 双语版</a> &nbsp;·&nbsp; <a href="README.zh.md">🇨🇳 中文版</a>
 </p>
 
 # 🏠 Dongbaihu Home Campus Forum
@@ -52,12 +52,10 @@
 
 ## 🌐 Live Demo
 
-| Page | Link | Description |
-|------|------|-------------|
-| 🏠 **Home** | [https://780417.xyz](https://780417.xyz) | Community home, check-in, feed |
-| 🔧 **Admin** | [https://780417.xyz/admin](https://780417.xyz/admin) | Admin dashboard |
-| 📝 **Feed** | [https://780417.xyz/feed](https://780417.xyz/feed) | Post list |
-| ✅ **Check-in** | [https://780417.xyz/checkin](https://780417.xyz/checkin) | Daily check-in |
+| Page | Link |
+|------|------|
+| 🏠 **Home** | [https://780417.xyz](https://780417.xyz) |
+| 🔧 **Admin** | [https://780417.xyz/admin](https://780417.xyz/admin) |
 
 **Admin Account:** `admin@dongbaihu.com` / `admin123`
 
